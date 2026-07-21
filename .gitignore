@@ -6,3 +6,31 @@ __pycache__/
 # Mac/Windows system files
 .DS_Store
 Thumbs.db
+# Rahasia Backend (SANGAT KRITIKAL)
+.env
+.env.*
+*.env
+
+# File Log Server
+*.log
+
+# Folder Eksperimen Lokal
+backend/testing_tool/
+
+# Cache dari tools Python
+.pytest_cache/
+.mypy_cache/
+
+# Konfigurasi Postman
+.postman/
+postman/
+
+# Limbah Pabrik Scraping
+Scrapling_data/*.txt
+Scrapling_data/*.json
+Scrapling_data/Scraping_Data/
+Scrapling_data/data_unstructured/
+
+# Limbah Pipeline Embedding
+backend/data_pipeline_embedding/*.json
+backend/data_pipeline_embedding/chunks_output/
