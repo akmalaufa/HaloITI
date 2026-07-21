@@ -1,0 +1,32 @@
+# --- Framework Backend & Environment ---
+fastapi>=0.110.0
+uvicorn==0.45.0
+pydantic==2.13.3
+pydantic-settings==2.14.0
+python-dotenv==1.2.2
+
+# --- AI Engine (Gemini) & Vector Database ---
+google-genai==2.8.0
+pinecone-client==3.2.2
+pinecone-text[splade]==0.8.0
+
+# --- Document Parsing ---
+python-docx==1.1.0
+
+# --- SQL Database (Supabase) ---
+sqlmodel>=0.0.16
+asyncpg>=0.29.0
+
+# --- Caching & Memory (Upstash) ---
+upstash-redis>=1.1.0
+
+# --- Security (Autentikasi Tiket) ---
+PyJWT>=2.8.0
+
+# --- Pertahanan Keamanan (Rate Limiting) ---
+slowapi>=0.1.10
+
+# --- Utilitas Tambahan (NLTK, Waktu, Retry) ---
+nltk==3.9.4
+pytz==2026.2
+tenacity==9.1.4
