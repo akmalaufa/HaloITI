@@ -7,8 +7,8 @@ from typing import Optional
 DB_SCHEMA_PROMPT = """
 Gunakan skema database PostgreSQL berikut untuk merakit sql_query:
 1. Tabel `prodi`: id_prodi (INT), nama_prodi (VARCHAR), jenjang (VARCHAR)
-2. Tabel `periode_pendaftaran`: id_periode (SERIAL), sistem (VARCHAR - 'Reguler', 'RPL', 'PSPPI'), nama_jalur (VARCHAR), gelombang (VARCHAR), tgl_buka (DATE), tgl_tutup (DATE)
-3. Tabel `biaya_studi`: id_biaya (SERIAL), id_prodi (INT), id_periode (INT), kelas (VARCHAR - 'Weekdays', 'Weekend'), jenis_jalur (VARCHAR), sks_min (INT), sks_max (INT), biaya_formulir (DECIMAL), biaya_asesmen (DECIMAL), biaya_pkkmb (DECIMAL), upp_nominal (DECIMAL), ukt_nominal (DECIMAL), diskon_full_payment (DECIMAL), diskon_alumni (DECIMAL), diskon_pengurus_pii (DECIMAL), diskon_gelombang (DECIMAL), biaya_sertifikasi_pratama (DECIMAL), biaya_sertifikasi_madya (DECIMAL), biaya_sertifikasi_utama (DECIMAL)
+2. Tabel `periode_pendaftaran`: id_periode (SERIAL), sistem (VARCHAR - 'Reguler', 'RPL', 'PSPPI'), nama_jalur (VARCHAR), gelombang (INT), tgl_buka (DATE), tgl_tutup (DATE), link_pendaftaran (VARCHAR)
+3. Tabel `biaya_studi`: id_biaya (SERIAL), id_prodi (INT), id_periode (INT), kelas (VARCHAR - 'Weekdays', 'Weekend', 'Hybrid', 'Full Online'), jenis_jalur (VARCHAR), sks_min (INT), sks_max (INT), biaya_formulir (DECIMAL), biaya_asesmen (DECIMAL), biaya_pkkmb (DECIMAL), upp_nominal (DECIMAL), ukt_nominal (DECIMAL), diskon_full_payment (DECIMAL), diskon_alumni (DECIMAL), diskon_pengurus_pii (DECIMAL), diskon_gelombang (DECIMAL), biaya_sertifikasi_pratama (DECIMAL), biaya_sertifikasi_madya (DECIMAL), biaya_sertifikasi_utama (DECIMAL)
 
 RELASI:
 - biaya_studi.id_prodi = prodi.id_prodi
@@ -19,6 +19,7 @@ ATURAN SQL:
 - Selalu gunakan INNER JOIN jika membutuhkan nama prodi atau detail periode.
 - Abaikan filter WHERE untuk parameter yang bernilai kosong (opsional).
 - WAJIB sertakan kolom keterangan pendukung di SELECT (seperti kelas, gelombang, atau nama_jalur) agar kamu bisa membedakan konteks dari masing-masing baris harga.
+- WAJIB sertakan kolom link_pendaftaran di SELECT jika ada, agar kamu bisa memberikan tautan pendaftaran langsung ke user saat ditanya.
 - WAJIB gunakan ILIKE '%...%' (jangan gunakan tanda =) untuk filter WHERE yang berbasis teks (seperti nama_jalur, prodi, atau gelombang) agar pencarian fleksibel dan kebal terhadap perbedaan huruf besar/kecil.
 - KAMUS SINGKATAN & SINONIM (WAJIB PATUHI SEBELUM MERAKIT SQL): 
   1. Prodi: PWK/Planologi = 'Perencanaan Wilayah dan Kota', TIP/Agroindustri = 'Teknologi Industri Pertanian', IF/IT/Informatika = 'Teknik Informatika', TI/Industri = 'Teknik Industri', TE/Elektro = 'Teknik Elektro', TK/Kimia = 'Teknik Kimia', PPI/PSPPI = 'Program Profesi Insinyur'.

@@ -16,7 +16,11 @@ elif db_url and db_url.startswith("postgresql://") and "+asyncpg" not in db_url:
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 # Kita pakai NullPool biar ringan dan nggak bentrok sama Supabase Pooler
-engine = create_async_engine(db_url, poolclass=NullPool) if db_url else None
+engine = create_async_engine(
+    db_url, 
+    poolclass=NullPool,
+    connect_args={"statement_cache_size": 0}
+) if db_url else None
 
 class LeadRequest(BaseModel):
     nama_lengkap: str
