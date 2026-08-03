@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -6,6 +7,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      authorization: {
+        params: {
+          prompt: "select_account",
+        },
+      },
     }),
   ],
   pages: {
@@ -22,5 +28,12 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions);
+const nextAuthHandler = NextAuth(authOptions);
+
+const handler = async (req: NextRequest, context: { params: Promise<{ nextauth: string[] }> }) => {
+  // Await the params Promise required by Next.js 15+ App Router
+  const params = await context.params;
+  return nextAuthHandler(req, { params });
+};
+
 export { handler as GET, handler as POST };

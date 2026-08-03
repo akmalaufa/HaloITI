@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 export function Navbar() {
   const { data: session } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
 
   // Deteksi scroll untuk mengubah wujud Navbar
@@ -21,6 +22,24 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Cek Status Admin
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (session) {
+        try {
+          const res = await fetch('/api/admin/auth/check');
+          const data = await res.json();
+          if (data.isAdmin) {
+            setIsAdmin(true);
+          }
+        } catch (error) {
+          console.error("Gagal mengecek status admin:", error);
+        }
+      }
+    };
+    checkAdminStatus();
+  }, [session]);
 
   // Animasi GSAP: Navbar turun perlahan dari atas saat web dibuka
   useGSAP(() => {
@@ -55,15 +74,28 @@ export function Navbar() {
           </span>
         </div>
 
-        {/* Tombol Masuk yang Elegan */}
-        <Link href={session ? "/chat" : "/login"}>
-          <Button
-            size="lg"
-            className="rounded-full bg-brand px-6 text-sm font-bold text-white hover:bg-brand/90 hover:scale-105 transition-transform border-0"
-          >
-            {session ? "Lanjutkan Chat" : "Mulai Percakapan"}
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Link href="/admin">
+              <Button
+                variant="outline"
+                size="lg"
+                className="rounded-full border-brand text-brand bg-black/50 hover:bg-brand hover:text-white transition-all hover:scale-105"
+              >
+                Dashboard Admin
+              </Button>
+            </Link>
+          )}
+          {/* Tombol Masuk yang Elegan */}
+          <Link href={session ? "/chat" : "/login"}>
+            <Button
+              size="lg"
+              className="rounded-full bg-brand px-6 text-sm font-bold text-white hover:bg-brand/90 hover:scale-105 transition-transform border-0"
+            >
+              {session ? "Lanjutkan Chat" : "Mulai Percakapan"}
+            </Button>
+          </Link>
+        </div>
       </nav>
     </header>
   );

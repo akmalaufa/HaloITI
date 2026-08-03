@@ -16,6 +16,7 @@ Thumbs.db
 
 # Folder Eksperimen Lokal
 backend/testing_tool/
+frontend/testing_tool_fe/
 
 # Cache dari tools Python
 .pytest_cache/

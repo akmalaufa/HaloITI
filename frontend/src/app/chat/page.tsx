@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import { Shield } from "lucide-react";
 
 // Tipe data untuk pesan obrolan
 
@@ -27,6 +28,7 @@ export default function ChatPage() {
   const { data: session } = useSession();
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // State untuk Pop-up WhatsApp
   const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
@@ -73,6 +75,24 @@ export default function ChatPage() {
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Cek apakah user adalah admin
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (session) {
+        try {
+          const res = await fetch("/api/admin/auth/check");
+          if (res.ok) {
+            const data = await res.json();
+            setIsAdmin(data.isAdmin);
+          }
+        } catch (error) {
+          console.error("Gagal cek status admin", error);
+        }
+      }
+    };
+    checkAdmin();
+  }, [session]);
 
   // Cek Auth dan Ambil History
   useEffect(() => {
@@ -149,11 +169,15 @@ export default function ChatPage() {
                   token = data.access_token;
                   localStorage.setItem("access_token", token);
                   await fetchHistory(token);
+                } else {
+                  // Jika Backend membalas 'need_whatsapp' (Berarti user udah kehapus di DB)
+                  localStorage.removeItem("access_token");
+                  signOut({ callbackUrl: '/' });
                 }
               } else {
                 // Jika Silent Check gagal (sesi Google habis)
                 localStorage.removeItem("access_token");
-                setHasWhatsApp(false);
+                signOut({ callbackUrl: '/' });
               }
             } catch (e) {
               console.error("Auto-renew error:", e);
@@ -168,6 +192,36 @@ export default function ChatPage() {
 
     initChat();
   }, []);
+
+  // Real-time Check: Ping backend setiap 5 detik untuk cek status akun
+  useEffect(() => {
+    if (!hasWhatsApp) return;
+
+    const checkAccountStatus = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const chatSessionId = "00000000-0000-0000-0000-000000000000";
+        // Cukup minta 1 history untuk mancing error 401 kalau akun dihapus
+        const res = await fetch(`${apiUrl}/api/chat/history/${chatSessionId}?limit=1&offset=0`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        
+        if (res.status === 401) {
+          localStorage.removeItem("access_token");
+          signOut({ callbackUrl: '/' });
+        }
+      } catch (error) {
+        // Abaikan error koneksi
+      }
+    };
+
+    const intervalId = setInterval(checkAccountStatus, 5000);
+    return () => clearInterval(intervalId);
+  }, [hasWhatsApp]);
 
   // --- FUNGSI REVERSE INFINITE SCROLL ---
   const fetchOlderHistory = useCallback(async () => {
@@ -275,16 +329,18 @@ export default function ChatPage() {
   };
 
   // Handle Kirim Pesan Chat (Streaming SSE)
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim() || isThinking) return;
+  const executeChat = async (messageText: string) => {
+    if (!messageText.trim() || isThinking) return;
 
     // 1. Masukkan pesan User
     const newUserMsg: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: inputValue,
+      content: messageText,
     };
+    // Siapkan ID untuk pesan AI yang akan ditumpuk perlahan
+    const newAiMsgId = (Date.now() + 1).toString();
+
     setMessages((prev) => [...prev, newUserMsg]);
     setInputValue("");
 
@@ -309,7 +365,7 @@ export default function ChatPage() {
         },
         body: JSON.stringify({
           session_id: chatSessionId,
-          message: inputValue
+          message: newUserMsg.content
         }),
         signal: abortController.signal
       });
@@ -331,30 +387,22 @@ export default function ChatPage() {
               },
               body: JSON.stringify({
                 session_id: chatSessionId,
-                message: inputValue
+                message: newUserMsg.content
               }),
               signal: abortController.signal
             });
           }
         }
       }
-      
-      // Menghapus blok clearTimeout
 
       if (!res.ok) {
         setIsThinking(false);
         setLiveStatus("");
-        const errorMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "ai",
-          content: `Maaf, server menolak permintaan (Error ${res.status}).`,
-        };
-        setMessages((prev) => [...prev, errorMsg]);
+        // Rollback: Hapus pesan user dari history & kembalikan ke input box
+        setMessages((prev) => prev.filter((msg) => msg.id !== newUserMsg.id && msg.id !== newAiMsgId));
+        setInputValue(newUserMsg.content);
         return;
       }
-
-      // Siapkan ID untuk pesan AI yang akan ditumpuk perlahan (Typewriter)
-      const newAiMsgId = (Date.now() + 1).toString();
 
       const reader = res.body?.getReader();
       const decoder = new TextDecoder("utf-8");
@@ -362,6 +410,8 @@ export default function ChatPage() {
       if (!reader) {
         setIsThinking(false);
         setLiveStatus("");
+        setMessages((prev) => prev.filter((msg) => msg.id !== newUserMsg.id && msg.id !== newAiMsgId));
+        setInputValue(newUserMsg.content);
         return;
       }
 
@@ -370,51 +420,55 @@ export default function ChatPage() {
 
       while (!doneReading) {
         const { value, done } = await reader.read();
+        
+        // Selalu proses value terlebih dahulu jika ada, meskipun done bernilai true
+        if (value) {
+          buffer += decoder.decode(value, { stream: true });
+          
+          // SSE memisahkan event dengan dua newline (\n\n)
+          const parts = buffer.split("\n\n");
+          
+          // Simpan part terakhir yang mungkin belum selesai (belum ada \n\n) ke dalam buffer
+          buffer = parts.pop() || "";
+
+          for (const part of parts) {
+            if (part.startsWith("data: ")) {
+              const jsonString = part.replace("data: ", "");
+              try {
+                const parsedData = JSON.parse(jsonString);
+                
+                if (parsedData.type === "status") {
+                  setLiveStatus(parsedData.message);
+                } else if (parsedData.type === "content_chunk") {
+                  // Sembunyikan Reasoning Trace karena jawaban akhir sudah mulai diketik
+                  setLiveStatus(""); 
+                  // Tumpuk huruf ke layar (Typewriter Effect)
+                  setMessages((prev) => {
+                    const exists = prev.find(msg => msg.id === newAiMsgId);
+                    if (exists) {
+                      return prev.map((msg) => 
+                        msg.id === newAiMsgId 
+                          ? { ...msg, content: msg.content + parsedData.message }
+                          : msg
+                      );
+                    } else {
+                      return [...prev, { id: newAiMsgId, role: "ai", content: parsedData.message }];
+                    }
+                  });
+                } else if (parsedData.type === "done") {
+                  setLiveStatus("");
+                  setIsThinking(false);
+                }
+              } catch (e) {
+                console.error("Gagal mem-parsing serpihan JSON SSE:", e);
+              }
+            }
+          }
+        }
+
         if (done) {
           doneReading = true;
           break;
-        }
-
-        buffer += decoder.decode(value, { stream: true });
-        
-        // SSE memisahkan event dengan dua newline (\n\n)
-        const parts = buffer.split("\n\n");
-        
-        // Simpan part terakhir yang mungkin belum selesai (belum ada \n\n) ke dalam buffer
-        buffer = parts.pop() || "";
-
-        for (const part of parts) {
-          if (part.startsWith("data: ")) {
-            const jsonString = part.replace("data: ", "");
-            try {
-              const parsedData = JSON.parse(jsonString);
-              
-              if (parsedData.type === "status") {
-                setLiveStatus(parsedData.message);
-              } else if (parsedData.type === "content_chunk") {
-                // Sembunyikan Reasoning Trace karena jawaban akhir sudah mulai diketik
-                setLiveStatus(""); 
-                // Tumpuk huruf ke layar (Typewriter Effect)
-                setMessages((prev) => {
-                  const exists = prev.find(msg => msg.id === newAiMsgId);
-                  if (exists) {
-                    return prev.map((msg) => 
-                      msg.id === newAiMsgId 
-                        ? { ...msg, content: msg.content + parsedData.message }
-                        : msg
-                    );
-                  } else {
-                    return [...prev, { id: newAiMsgId, role: "ai", content: parsedData.message }];
-                  }
-                });
-              } else if (parsedData.type === "done") {
-                setLiveStatus("");
-                setIsThinking(false);
-              }
-            } catch (e) {
-              console.error("Gagal mem-parsing serpihan JSON SSE:", e);
-            }
-          }
         }
       }
     } catch (error: any) {
@@ -424,14 +478,40 @@ export default function ChatPage() {
       }
       setIsThinking(false);
       setLiveStatus("");
-      const errorMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "ai",
-        content: "❌ Gagal terhubung ke server Backend. Pastikan uvicorn sudah berjalan.",
-      };
-      setMessages((prev) => [...prev, errorMsg]);
+      // Jika AI belum sempat ngetik apa-apa (pesan belum masuk atau masih kosong), kita rollback total
+      setMessages((prev) => {
+        const aiMsg = prev.find(msg => msg.id === newAiMsgId);
+        if (!aiMsg || aiMsg.content.trim() === "") {
+          setInputValue(newUserMsg.content); // Restore input hanya jika jawaban belum diketik
+          return prev.filter((msg) => msg.id !== newUserMsg.id && msg.id !== newAiMsgId);
+        }
+        return prev;
+      });
+    } finally {
+      // GARANSI 100%: Apapun yang terjadi (sukses, error, putus), selalu unlock UI!
+      setIsThinking(false);
+      setLiveStatus("");
     }
   };
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await executeChat(inputValue);
+  };
+
+  // Auto-Trigger Pesan dari Landing Page
+  useEffect(() => {
+    if (hasWhatsApp && !isCheckingAuth && !isThinking) {
+      const pendingQuery = localStorage.getItem("pending_chat_query");
+      if (pendingQuery) {
+        localStorage.removeItem("pending_chat_query");
+        // Beri sedikit jeda agar DOM Chat Arena selesai dimuat
+        setTimeout(() => {
+          executeChat(pendingQuery);
+        }, 300);
+      }
+    }
+  }, [hasWhatsApp, isCheckingAuth, isThinking]);
 
   // Handle Stop Response
   const handleStopResponse = (e: React.MouseEvent) => {
@@ -494,12 +574,21 @@ export default function ChatPage() {
                 </div>
                 {errorWA && <p className="text-red-500 text-xs mt-2 text-left">{errorWA}</p>}
               </div>
-              <button
-                type="submit"
-                className="w-full bg-brand hover:bg-brand/90 text-white font-medium py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(231,120,23,0.3)] hover:shadow-[0_0_25px_rgba(231,120,23,0.5)]"
-              >
-                Simpan & Mulai Chat
-              </button>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="w-full bg-[#27272a] hover:bg-[#3f3f46] text-white/80 font-medium py-3 rounded-xl transition-all border border-white/5"
+                >
+                  Batal Login
+                </button>
+                <button
+                  type="submit"
+                  className="w-full bg-brand hover:bg-brand/90 text-white font-medium py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(231,120,23,0.3)] hover:shadow-[0_0_25px_rgba(231,120,23,0.5)]"
+                >
+                  Simpan & Mulai Chat
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -562,6 +651,17 @@ export default function ChatPage() {
                   <p className="text-sm text-white font-medium truncate">{session?.user?.name}</p>
                   <p className="text-xs text-gray-400 truncate">{session?.user?.email}</p>
                 </div>
+                
+                {isAdmin && (
+                  <Link 
+                    href="/admin/leads"
+                    className="w-full text-left px-4 py-2.5 text-sm text-white/80 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-2"
+                  >
+                    <Shield className="h-4 w-4" />
+                    Dashboard Admin
+                  </Link>
+                )}
+                
                 <button 
                   onClick={() => {
                     setHasWhatsApp(false);
