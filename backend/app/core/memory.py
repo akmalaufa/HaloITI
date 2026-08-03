@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from upstash_redis import Redis
 from sqlalchemy import text
 from app.core.config import settings
-from app.tools.supabase_tool import engine
+from app.tools.supabase_tool import admin_engine
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -48,7 +48,7 @@ async def get_chat_history(session_id: str, id_lead: str, limit: int = SLIDING_W
         # 2. Cache Miss atau Offset > 0: Tarik dari Supabase
         logger.info(f"⏳ [Memory] Menarik dari Supabase (Limit: {limit}, Offset: {offset}) untuk {redis_key}...")
         
-        async with engine.connect() as connection:
+        async with admin_engine.connect() as connection:
             # Ambil 1 pesan terakhir untuk mengecek usia (Temporal Blindness Check)
             check_sql = """
                 SELECT created_at 
@@ -138,7 +138,7 @@ async def save_chat_history(session_id: str, id_lead: str, user_query: str, bot_
 
     # --- 2. Update Supabase (Harddisk Abadi, Teks Murni) ---
     try:
-        async with engine.begin() as connection:
+        async with admin_engine.begin() as connection:
             insert_sql = """
                 INSERT INTO chat_logs 
                 (id_lead, session_id, user_query, bot_response, routed_to, prompt_tokens, completion_tokens, response_time_ms)

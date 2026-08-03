@@ -4,22 +4,40 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.core.config import settings
 from typing import Optional
 
-# 1. Inisialisasi Mesin Database Asinkronus (AsyncEngine)
+# Import official Supabase client untuk Storage
+from supabase import create_client, Client
+
+# Inisialisasi Supabase REST Client
+if not settings.SUPABASE_URL or not settings.SUPABASE_KEY:
+    raise ValueError("FATAL: SUPABASE_URL atau SUPABASE_KEY tidak ditemukan!")
+supabase_client: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+
+# 1. Inisialisasi Mesin Database Asinkronus (AsyncEngine) KHUSUS AGEN (Read-Only)
 # Menggunakan NullPool untuk mencegah bentrok dengan Transaction Pooler Supabase
-# Pakai URL khusus Agen, kalau kosong baru fallback ke URL utama
-# WAJIB pakai URL khusus Agen yang aman
 db_url = settings.AGENT_DATABASE_URL
 if not db_url:
     raise ValueError("FATAL: AGENT_DATABASE_URL tidak ditemukan di file .env! Agen dilarang menyala tanpa pengamanan.")
 
-# Memastikan URL menggunakan asyncpg untuk keamanan
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
 elif db_url.startswith("postgresql://") and "+asyncpg" not in db_url:
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
+# 2. Inisialisasi Mesin Database Asinkronus KHUSUS ADMIN (Read-Write)
+admin_db_url = settings.DATABASE_URL
+if admin_db_url.startswith("postgres://"):
+    admin_db_url = admin_db_url.replace("postgres://", "postgresql+asyncpg://", 1)
+elif admin_db_url.startswith("postgresql://") and "+asyncpg" not in admin_db_url:
+    admin_db_url = admin_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 engine = create_async_engine(
     db_url, 
+    poolclass=NullPool,
+    connect_args={"statement_cache_size": 0}
+)
+
+admin_engine = create_async_engine(
+    admin_db_url, 
     poolclass=NullPool,
     connect_args={"statement_cache_size": 0}
 )

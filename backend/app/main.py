@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api import chat
 from app.api import leads
+from app.api import admin
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -56,3 +57,6 @@ app.include_router(chat.router, prefix="/api/chat", tags=["Agent Chat"])
 
 # 6. PENDAFTARAN MABA (LEAD GENERATION)
 app.include_router(leads.router, prefix="/api/leads", tags=["Lead Generation"])
+
+# 7. JALUR VIP KHUSUS ADMIN (CRUD DATABASE)
+app.include_router(admin.router, prefix="/api/admin", tags=["Admin Dashboard"])

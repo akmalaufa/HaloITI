@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,12 @@ import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const [showTerms, setShowTerms] = useState(false);
+
+  // Sapu bersih token lama setiap kali user mendarat di halaman login
+  useEffect(() => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("chat_session_id");
+  }, []);
 
   return (
     <div className="relative flex min-h-screen w-full bg-background overflow-hidden">
