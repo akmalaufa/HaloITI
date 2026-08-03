@@ -217,12 +217,33 @@ async def chat_with_agent(session_id: str, id_lead: str, user_input: str):
             try:
                 logger.info(f"🧠 [AI Engine] Memulai proses pemikiran dengan model: {model_name}...")
                 
-                # Panggil AI mode Streaming
-                response_stream = await client.aio.models.generate_content_stream(
-                    model=model_name,
-                    contents=contents,
-                    config=get_agent_config()
-                )
+                # Micro-Retry dengan Exponential Backoff (Maks 2 kali retry)
+                max_retries = 2
+                base_delay = 1.0 # detik
+                
+                for attempt in range(max_retries + 1):
+                    try:
+                        # Panggil AI mode Streaming
+                        response_stream = await client.aio.models.generate_content_stream(
+                            model=model_name,
+                            contents=contents,
+                            config=get_agent_config()
+                        )
+                        break # Keluar dari loop micro-retry jika sukses
+                    except Exception as e:
+                        # Jika error 429 (Rate Limit / Quota), JANGAN RETRY! Langsung lempar untuk Fallback.
+                        if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                            raise e 
+                            
+                        # Jika ini percobaan terakhir, lempar errornya
+                        if attempt == max_retries:
+                            raise e
+                            
+                        # Jika error lain (503, 500, Timeout), lakukan backoff
+                        sleep_time = base_delay * (2 ** attempt)
+                        logger.warning(f"🔄 [Micro-Retry] Model {model_name} ngalamin glitch ({e}). Mencoba lagi dalam {sleep_time}s... (Percobaan {attempt + 1}/{max_retries})")
+                        await asyncio.sleep(sleep_time)
+                        
                 # Jika sukses, segera keluar dari perulangan model
                 break 
                 
@@ -265,6 +286,14 @@ async def chat_with_agent(session_id: str, id_lead: str, user_input: str):
                         full_text_accumulator += chunk_text
                         # Kirim Typewriter Effect langsung ke Frontend
                         yield f'data: {json.dumps({"type": "content_chunk", "message": chunk_text})}\n\n'
+                        
+                    # Ekstrak Metadata Token (biasanya ada di chunk terakhir)
+                    if chunk.usage_metadata:
+                        try:
+                            total_prompt_tokens += chunk.usage_metadata.prompt_token_count or 0
+                            total_completion_tokens += chunk.usage_metadata.candidates_token_count or 0
+                        except Exception as e:
+                            logger.warning(f"Gagal membaca token usage: {e}")
             except Exception as stream_e:
                 logger.error(f"❌ STREAMING TERPUTUS DI TENGAH JALAN: {stream_e}")
                 should_cache = False
@@ -273,6 +302,13 @@ async def chat_with_agent(session_id: str, id_lead: str, user_input: str):
                     try:
                         yield f'data: {json.dumps({"type": "status", "message": "Koneksi kurang stabil..."})}\n\n'
                         yield f'data: {json.dumps({"type": "content_chunk", "message": final_bot_response})}\n\n'
+                    except Exception:
+                        pass
+                else:
+                    pesan_terpotong = "\n\n*(Maaf, jawaban terpotong karena gangguan koneksi ke server AI)*"
+                    full_text_accumulator += pesan_terpotong
+                    try:
+                        yield f'data: {json.dumps({"type": "content_chunk", "message": pesan_terpotong})}\n\n'
                     except Exception:
                         pass
                 break
@@ -290,7 +326,6 @@ async def chat_with_agent(session_id: str, id_lead: str, user_input: str):
             for func_call in function_calls_accumulator:
                 tool_name = func_call.name
                 mapped_name = TOOL_DATABASE_MAP.get(tool_name, tool_name)
-                routed_tools.add(mapped_name)
                 
                 friendly_name = TRANSLATION_MAP.get(tool_name, "Memproses data lanjutan")
                 translated_statuses.append(friendly_name)
@@ -302,15 +337,19 @@ async def chat_with_agent(session_id: str, id_lead: str, user_input: str):
                     
                     if lapis_2_hit:
                         logger.info(f"⚡ [ReAct] Bypass Database! Ambil dari Lapis 2 untuk alat: {tool_name}")
+                        routed_tools.add(f"Global Cache (Lapis 2) - {mapped_name}")
                         async def dummy_result(res):
                             return res
                         tasks.append(dummy_result(lapis_2_hit))
                     else:
+                        routed_tools.add(mapped_name)
                         executor = TOOL_EXECUTORS[tool_name]
                         tasks.append(executor(**func_call.args))
                     
                     last_tool_name = tool_name
                     last_tool_args = func_args_dict
+                else:
+                    routed_tools.add(mapped_name)
 
             combined_status = " dan ".join(translated_statuses) + "..."
             yield f'data: {json.dumps({"type": "status", "message": combined_status})}\n\n'
