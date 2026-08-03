@@ -28,6 +28,7 @@ class Settings:
     JWT_SECRET: str | None = os.getenv("JWT_SECRET")
     X_API_KEY: str = os.getenv("X_API_KEY", "SuperSecretITI2026")
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
     # 5. Konfigurasi Agen (Protokol 3 & Router)
     MAX_REACT_ITERATIONS: int = 5
@@ -54,6 +55,10 @@ class Settings:
             missing_keys.append("UPSTASH_REDIS_REST_TOKEN")
         if not cls.JWT_SECRET:
             missing_keys.append("JWT_SECRET")
+        if not cls.DATABASE_URL:
+            missing_keys.append("DATABASE_URL")
+        if not cls.AGENT_DATABASE_URL:
+            missing_keys.append("AGENT_DATABASE_URL")
 
         if missing_keys:
             # Memunculkan pesan peringatan keras ke layar terminal (Crash sistem secara sengaja)
