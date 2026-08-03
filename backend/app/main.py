@@ -7,7 +7,8 @@ from app.api import admin
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from app.core.security import limiter
+from app.core.security import limiter, security_engine
+from sqlalchemy import text
 
 # 1. MENGAKTIFKAN SATPAM KEAMANAN
 # Baris ini akan otomatis mengecek file .env lu. Kalau kunci kurang, server gagal nyala.
@@ -36,19 +37,33 @@ app.add_middleware(SlowAPIMiddleware)
 # Ini wajib supaya Frontend (Next.js) yang alamatnya beda, diizinkan ngobrol sama server ini
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"], # Harus spesifik jika allow_credentials=True
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000",
+        settings.FRONTEND_URL # Dinamis membaca dari file .env
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"], # Mengizinkan semua metode umum
     allow_headers=["*"], # Izinkan semua header termasuk Authorization
 )
 
 # 4. RUTE ANTI-TIDUR (Health Check)
-# Rute ini murni dipakai untuk ditembak oleh Cron-Job.org supaya server Render lu melek 24 jam
+# Rute ini dipakai untuk ditembak oleh Cron-Job.org supaya Supabase Free Tier tidak tertidur
 @app.get("/health")
 async def health_check():
+    db_status = "terhubung"
+    try:
+        # Melakukan ketukan ringan ke Supabase (SELECT 1) agar aktivitas tercatat
+        if security_engine:
+            async with security_engine.connect() as conn:
+                await conn.execute(text("SELECT 1"))
+    except Exception as e:
+        db_status = f"terputus ({str(e)})"
+        
     return {
         "status": "sehat",
-        "message": "Server PMB ITI berjalan lancar dan siap menerima chat!"
+        "database": db_status,
+        "message": "Server PMB ITI berjalan lancar dan Supabase tetap terjaga!"
     }
 
 # (Nanti rute utama buat chat dengan agen Gemini akan kita tambahkan di bawah sini)
