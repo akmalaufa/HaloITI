@@ -26,7 +26,7 @@ class Settings:
 
     # 5. Konfigurasi Keamanan (JWT & API Proxy)
     JWT_SECRET: str | None = os.getenv("JWT_SECRET")
-    X_API_KEY: str = os.getenv("X_API_KEY", "SuperSecretITI2026")
+    X_API_KEY: str | None = os.getenv("X_API_KEY")
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
@@ -59,6 +59,8 @@ class Settings:
             missing_keys.append("DATABASE_URL")
         if not cls.AGENT_DATABASE_URL:
             missing_keys.append("AGENT_DATABASE_URL")
+        if not cls.X_API_KEY:
+            missing_keys.append("X_API_KEY")
 
         if missing_keys:
             # Memunculkan pesan peringatan keras ke layar terminal (Crash sistem secara sengaja)
