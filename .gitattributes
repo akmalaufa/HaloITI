@@ -1,0 +1,2 @@
+# Keep LF on shell scripts so they run on the Ubuntu VPS even when committed from Windows.
+*.sh text eol=lf
