@@ -38,6 +38,8 @@ fi
 command -v pm2 >/dev/null || npm install -g pm2
 
 log "3/7 Backend venv + deps"
+# /var/www is root-owned by default; make the repo user-owned so venv/pip run without sudo
+chown -R "$RUN_USER":"$RUN_USER" "$REPO_ROOT"
 as_user "cd '$REPO_ROOT/backend' && python3 -m venv venv && \
   ./venv/bin/pip install --upgrade pip -q && \
   ./venv/bin/pip install -r requirements.txt"
