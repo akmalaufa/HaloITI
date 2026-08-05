@@ -6,7 +6,7 @@ module.exports = {
       name: "pmb-backend",
       cwd: "./backend",
       script: "./venv/bin/uvicorn",
-      args: "app.main:app --host 127.0.0.1 --port 8000 --proxy-headers",
+      args: "app.main:app --host 127.0.0.1 --port 8001 --proxy-headers",
       interpreter: "none", // uvicorn is already a native executable inside the venv
       autorestart: true,
       max_restarts: 10,
@@ -15,8 +15,9 @@ module.exports = {
       name: "pmb-frontend",
       cwd: "./frontend",
       script: "npm",
-      args: "run start", // serves the pre-built .next on port 3000
+      args: "run start", // serves the pre-built .next; port di-set via -p di package.json
       interpreter: "none",
+
       autorestart: true,
       max_restarts: 10,
     },
