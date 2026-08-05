@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Membaca isi file .env yang ada di folder root backend
-load_dotenv()
+# Membaca .env di root backend via path absolut (tahan terhadap cwd PM2/systemd).
+# config.py ada di backend/app/core/ -> parents[2] = backend/
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 class Settings:
     """Konfigurasi utama aplikasi Backend FastAPI."""
