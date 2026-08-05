@@ -51,7 +51,7 @@ export default function DeleteLeadButton({ idLead, nama }: { idLead: string, nam
 
       {/* Modal Konfirmasi Kustom via React Portal */}
       {showModal && mounted && createPortal(
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="mx-4 w-full max-w-md rounded-2xl border border-white/10 bg-[#18181b] p-6 text-center shadow-2xl animate-in zoom-in-95 duration-200">
             <h3 className="mb-2 text-xl font-bold text-white">Hapus Permanen?</h3>
             <p className="mb-6 text-sm text-gray-400">

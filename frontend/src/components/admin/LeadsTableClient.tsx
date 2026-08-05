@@ -46,7 +46,7 @@ export default function LeadsTableClient({ initialLeads }: { initialLeads: Lead[
     <div className="rounded-xl border border-white/10 bg-white/5 p-1 shadow-lg backdrop-blur-sm">
       <div className="overflow-x-auto w-full rounded-lg ring-1 ring-white/10 shadow-2xl">
         <table className="w-full text-center text-sm text-gray-300">
-          <thead className="bg-[#1a1a1a] text-xs uppercase text-[var(--color-brand)]">
+          <thead className="bg-[#1a1a1a] text-xs uppercase text-brand">
             <tr>
               <th scope="col" className="px-6 py-4 font-semibold w-16 whitespace-nowrap">No.</th>
               <th scope="col" className="px-6 py-4 font-semibold whitespace-nowrap">Nama Lengkap</th>

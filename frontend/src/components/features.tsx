@@ -76,9 +76,9 @@ export function Features() {
           WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 150px, black calc(100% - 150px), transparent 100%)'
         }}
       >
-        <div className="absolute top-[0%] left-[-10%] w-[800px] h-[800px] rounded-full bg-brand/35 blur-[180px]" />
-        <div className="absolute top-[40%] right-[-10%] w-[1000px] h-[1000px] rounded-full bg-brand/25 blur-[200px]" />
-        <div className="absolute bottom-[5%] left-[5%] w-[800px] h-[800px] rounded-full bg-brand/30 blur-[180px]" />
+        <div className="absolute top-[0%] left-[-10%] w-200 h-200 rounded-full bg-brand/35 blur-[180px]" />
+        <div className="absolute top-[40%] right-[-10%] w-250 h-250 rounded-full bg-brand/25 blur-[200px]" />
+        <div className="absolute bottom-[5%] left-[5%] w-200 h-200 rounded-full bg-brand/30 blur-[180px]" />
       </div>
       
       <div className="relative z-10 mx-auto max-w-7xl flex flex-col gap-32">
@@ -105,7 +105,7 @@ export function Features() {
 
               {/* --- Blok Teks --- */}
               <div className="feature-text w-1/2 flex flex-col justify-center">
-                <h3 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 tracking-tight leading-tight pb-1 mb-2">
+                <h3 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-linear-to-b from-white to-white/60 tracking-tight leading-tight pb-1 mb-2">
                   {feat.title}
                 </h3>
                 <p className="text-sm sm:text-lg md:text-xl text-brand leading-relaxed font-semibold">

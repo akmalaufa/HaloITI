@@ -35,7 +35,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
   if (pathname.includes("/users")) title = "Manajemen Akses Admin";
 
   return (
-    <nav className="sticky top-0 z-30 flex h-16 w-full items-center justify-between bg-[var(--color-brand)] px-6 shadow-md">
+    <nav className="sticky top-0 z-30 flex h-16 w-full items-center justify-between bg-brand px-6 shadow-md">
       <div className="flex items-center gap-3">
         <button 
           onClick={onMenuClick}
@@ -53,11 +53,11 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-3 transition-all hover:opacity-80 focus:outline-none"
           >
-            <div className="flex flex-col items-end hidden sm:flex">
-              <span className="text-sm font-medium text-white max-w-[150px] truncate">
+            <div className="hidden flex-col items-end sm:flex">
+              <span className="text-sm font-medium text-white max-w-37.5 truncate">
                 {session?.user?.name || "Admin ITI"}
               </span>
-              <span className="text-xs text-white/70 max-w-[150px] truncate">
+              <span className="text-xs text-white/70 max-w-37.5 truncate">
                 {session?.user?.email || "admin@iti.ac.id"}
               </span>
             </div>

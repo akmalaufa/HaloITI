@@ -69,7 +69,7 @@ export function Navbar() {
               className="object-contain"
             />
           </div>
-          <span className="text-[10px] sm:text-sm font-extrabold tracking-widest sm:tracking-[0.2em] text-white uppercase w-[120px] sm:w-auto leading-tight">
+          <span className="text-[10px] sm:text-sm font-extrabold tracking-widest sm:tracking-[0.2em] text-white uppercase w-30 sm:w-auto leading-tight">
             Institut Teknologi Indonesia
           </span>
         </div>

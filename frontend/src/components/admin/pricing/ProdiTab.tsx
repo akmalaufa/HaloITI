@@ -142,7 +142,7 @@ export default function ProdiTab() {
     <div className="flex flex-col gap-4 w-full relative">
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-[9999] px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform duration-300 animate-in fade-in slide-in-from-top-4 ${toast.type === "success" ? "bg-emerald-500/90 border border-emerald-400" : "bg-red-500/90 border border-red-400"} text-white backdrop-blur-md`}>
+        <div className={`fixed top-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-9999 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform duration-300 animate-in fade-in slide-in-from-top-4 ${toast.type === "success" ? "bg-emerald-500/90 border border-emerald-400" : "bg-red-500/90 border border-red-400"} text-white backdrop-blur-md`}>
           {toast.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
           <span className="font-medium text-sm">{toast.message}</span>
         </div>
@@ -152,7 +152,7 @@ export default function ProdiTab() {
         <h2 className="text-xl font-semibold text-white">Daftar Program Studi</h2>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 rounded-lg bg-[var(--color-brand)] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00]"
+          className="flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00]"
         >
           <Plus className="h-4 w-4" />
           Tambah Prodi
@@ -162,7 +162,7 @@ export default function ProdiTab() {
       <div className="rounded-xl border border-white/10 bg-white/5 p-1 shadow-lg backdrop-blur-sm">
         <div className="overflow-x-auto w-full rounded-lg ring-1 ring-white/10">
           <table className="w-full text-left text-sm text-gray-300">
-            <thead className="bg-[#1a1a1a] text-xs uppercase text-[var(--color-brand)]">
+            <thead className="bg-[#1a1a1a] text-xs uppercase text-brand">
               <tr>
                 <th scope="col" className="px-6 py-4 font-semibold w-16 text-center">No.</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Nama Program Studi</th>
@@ -174,7 +174,7 @@ export default function ProdiTab() {
               {isLoading ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                    <Loader2 className="h-6 w-6 animate-spin text-[var(--color-brand)] mx-auto mb-2" />
+                    <Loader2 className="h-6 w-6 animate-spin text-brand mx-auto mb-2" />
                     Memuat data...
                   </td>
                 </tr>
@@ -251,7 +251,7 @@ export default function ProdiTab() {
                 <input
                   type="number"
                   required
-                  className="rounded-lg border border-white/10 bg-white/5 p-2.5 text-white placeholder-gray-500 focus:border-[var(--color-brand)] focus:outline-none focus:ring-1 focus:ring-[var(--color-brand)]"
+                  className="rounded-lg border border-white/10 bg-white/5 p-2.5 text-white placeholder-gray-500 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
                   value={formData.id_prodi || ""}
                   onChange={(e) => setFormData({...formData, id_prodi: parseInt(e.target.value) || 0})}
                 />
@@ -262,7 +262,7 @@ export default function ProdiTab() {
                 <input
                   type="text"
                   required
-                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                   placeholder="Contoh: Teknik Informatika"
                   value={formData.nama_prodi}
                   onChange={(e) => setFormData({...formData, nama_prodi: e.target.value})}
@@ -273,7 +273,7 @@ export default function ProdiTab() {
                 <label className="text-sm font-medium text-gray-300">Jenjang</label>
                 <select
                   required
-                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                   value={formData.jenjang}
                   onChange={(e) => setFormData({...formData, jenjang: e.target.value})}
                 >
@@ -293,7 +293,7 @@ export default function ProdiTab() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-brand)] font-medium text-white hover:bg-[#e07a00] transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand font-medium text-white hover:bg-[#e07a00] transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                   Simpan Data

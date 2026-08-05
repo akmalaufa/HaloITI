@@ -10,7 +10,7 @@ export default function KnowledgePage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2 items-center text-center sm:items-start sm:text-left">
         <h1 className="flex items-center justify-center sm:justify-start gap-2 text-3xl font-bold tracking-tight text-white">
-          <FileText className="h-8 w-8 text-[var(--color-brand)]" />
+          <FileText className="h-8 w-8 text-brand" />
           Manajemen Dokumen
         </h1>
         <p className="text-gray-400 max-w-2xl">

@@ -177,7 +177,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
           id="lead-select"
           value={selectedLead}
           onChange={(e) => setSelectedLead(e.target.value)}
-          className="flex-1 cursor-pointer rounded-lg border border-white/10 bg-[#0a0a0a] p-2.5 text-sm text-white focus:border-[var(--color-brand)] focus:outline-none focus:ring-1 focus:ring-[var(--color-brand)]"
+          className="flex-1 cursor-pointer rounded-lg border border-white/10 bg-[#0a0a0a] p-2.5 text-sm text-white focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         >
           <option value="">-- Pilih Calon Mahasiswa --</option>
           {leads.map((lead) => (
@@ -196,7 +196,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
             <p>Silakan pilih Maba dari dropdown di atas untuk melihat riwayat percakapan.</p>
           </div>
         ) : isLoading ? (
-          <div className="flex h-full flex-col items-center justify-center text-[var(--color-brand)]">
+          <div className="flex h-full flex-col items-center justify-center text-brand">
             <div className="flex items-center space-x-3">
               <div className="w-2.5 h-2.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
               <div className="w-2.5 h-2.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -221,7 +221,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
               Header: () => (
                 isLoadingMore ? (
                   <div className="w-full flex justify-center py-6">
-                    <div className="flex items-center space-x-3 text-[var(--color-brand)]">
+                    <div className="flex items-center space-x-3 text-brand">
                       <div className="w-2.5 h-2.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                       <div className="w-2.5 h-2.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                       <div className="w-2.5 h-2.5 bg-current rounded-full animate-bounce"></div>
@@ -236,14 +236,14 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
                 {/* Bubble User (Maba) */}
                 <div className="flex items-start justify-end gap-3">
                   <div className="flex flex-col items-end">
-                    <div className="rounded-2xl rounded-tr-none bg-[var(--color-brand)] p-4 text-sm text-white shadow-md">
+                    <div className="rounded-2xl rounded-tr-none bg-brand p-4 text-sm text-white shadow-md">
                       {chat.user_query.replace(/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2} WIB\]\s*/, "")}
                     </div>
                     <span className="mt-1 text-xs text-gray-500">
                       {leads.find(l => l.id_lead === selectedLead)?.nama_lengkap || "Maba"} • {chat.created_at}
                     </span>
                   </div>
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand)]/20 text-[var(--color-brand)]">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/20 text-brand">
                     <User className="h-4 w-4" />
                   </div>
                 </div>
@@ -310,17 +310,17 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
                             return <tbody className="bg-zinc-900/50 divide-y divide-zinc-800" {...props}>{newRows}</tbody>;
                           },
                           tr: ({node, ...props}) => <tr className="hover:bg-zinc-800/40 transition-colors duration-200" {...props} />,
-                          th: ({node, ...props}) => <th className="px-4 py-3 font-semibold border-b border-r border-zinc-700 last:border-r-0 text-center min-w-[100px]" {...props} style={{ ...(props.style || {}), textAlign: 'center' }} />,
+                          th: ({node, ...props}) => <th className="px-4 py-3 font-semibold border-b border-r border-zinc-700 last:border-r-0 text-center min-w-25" {...props} style={{ ...(props.style || {}), textAlign: 'center' }} />,
                           td: ({node, ...props}) => <td className="px-4 py-3 text-zinc-300 border-r border-zinc-700/50 last:border-r-0 text-center" {...props} style={{ ...(props.style || {}), textAlign: 'center' }} />,
                           ul: ({node, ...props}) => <ul className="list-disc list-outside ml-5 mb-4 space-y-1" {...props} />,
                           ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-5 mb-4 space-y-1" {...props} />,
                           li: ({node, ...props}) => <li className="pl-1" {...props} />,
-                          a: ({node, ...props}) => <a className="text-[var(--color-brand)] hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                          a: ({node, ...props}) => <a className="text-brand hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
                           h1: ({node, ...props}) => <h1 className="text-xl font-bold text-white mt-5 mb-3" {...props} />,
                           h2: ({node, ...props}) => <h2 className="text-lg font-bold text-white mt-5 mb-3" {...props} />,
                           h3: ({node, ...props}) => <h3 className="text-base font-semibold text-white mt-4 mb-2" {...props} />,
                           h4: ({node, ...props}) => <h4 className="text-[15px] font-semibold text-white mt-4 mb-2" {...props} />,
-                          blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-[var(--color-brand)]/50 pl-3 italic text-gray-300 my-3 bg-white/5 py-1 pr-2 rounded-r" {...props} />,
+                          blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-brand/50 pl-3 italic text-gray-300 my-3 bg-white/5 py-1 pr-2 rounded-r" {...props} />,
                         }}
                       >
                         {chat.bot_response.replace(/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2} WIB\]\s*/, "")}
@@ -331,7 +331,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
                     <div className="mt-2 flex flex-wrap items-center gap-y-1.5 gap-x-3 rounded-lg bg-black/40 px-3 py-2 text-[10px] sm:text-xs text-gray-400 border border-white/5 w-fit max-w-full">
                       <span className="flex items-center gap-1 font-mono">
                         <Network className="h-3 w-3 shrink-0 text-emerald-400" />
-                        <span className="break-words max-w-xs leading-tight">[{chat.routed_to}]</span>
+                        <span className="wrap-break-word max-w-xs leading-tight">[{chat.routed_to}]</span>
                       </span>
                       <span className="flex items-center gap-1 font-mono shrink-0">
                         <Zap className="h-3 w-3 shrink-0 text-amber-400" />

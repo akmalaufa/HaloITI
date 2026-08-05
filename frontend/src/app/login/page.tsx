@@ -28,11 +28,11 @@ export default function LoginPage() {
           priority
         />
         {/* Fading agar gambar menyatu ke background hitam di sisi kanan */}
-        <div className="absolute inset-y-0 right-0 w-3/4 bg-gradient-to-l from-background via-background/80 to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-3/4 bg-linear-to-l from-background via-background/80 to-transparent" />
       </div>
 
       {/* 2. GRADASI AMBIENT KESELURUHAN */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-background/40 to-brand/20 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-br from-transparent via-background/40 to-brand/20 pointer-events-none" />
       <div className="absolute inset-0 bg-brand/5 mix-blend-overlay pointer-events-none" />
 
       {/* 3. KONTEN KIRI (Teks & Logo) */}
@@ -137,7 +137,7 @@ export default function LoginPage() {
           />
           
           {/* Kotak Modal */}
-          <div className="relative z-10 w-full max-w-lg rounded-2xl border border-white/10 bg-gradient-to-br from-background via-background to-brand/30 p-8 shadow-2xl overflow-hidden">
+          <div className="relative z-10 w-full max-w-lg rounded-2xl border border-white/10 bg-linear-to-br from-background via-background to-brand/30 p-8 shadow-2xl overflow-hidden">
             <h3 className="relative text-2xl font-bold text-white mb-6">Syarat & Ketentuan HaloITI</h3>
             
             <div className="relative space-y-5 text-sm text-white/70 max-h-[60vh] overflow-y-auto pr-4">

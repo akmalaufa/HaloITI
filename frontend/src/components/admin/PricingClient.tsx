@@ -32,7 +32,7 @@ export default function PricingClient() {
           onClick={() => setActiveTab("biaya")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-lg transition-all ${
             activeTab === "biaya"
-              ? "bg-[var(--color-brand)] text-white shadow-lg"
+              ? "bg-brand text-white shadow-lg"
               : "bg-[#1a1a1a] text-gray-400 hover:bg-[#2a2a2a] hover:text-white border border-white/5"
           }`}
         >
@@ -44,7 +44,7 @@ export default function PricingClient() {
           onClick={() => setActiveTab("prodi")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-lg transition-all ${
             activeTab === "prodi"
-              ? "bg-[var(--color-brand)] text-white shadow-lg"
+              ? "bg-brand text-white shadow-lg"
               : "bg-[#1a1a1a] text-gray-400 hover:bg-[#2a2a2a] hover:text-white border border-white/5"
           }`}
         >
@@ -56,7 +56,7 @@ export default function PricingClient() {
           onClick={() => setActiveTab("periode")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-lg transition-all ${
             activeTab === "periode"
-              ? "bg-[var(--color-brand)] text-white shadow-lg"
+              ? "bg-brand text-white shadow-lg"
               : "bg-[#1a1a1a] text-gray-400 hover:bg-[#2a2a2a] hover:text-white border border-white/5"
           }`}
         >

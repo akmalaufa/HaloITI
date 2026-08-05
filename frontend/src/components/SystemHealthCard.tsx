@@ -119,7 +119,7 @@ export default function SystemHealthCard({ apiKey }: { apiKey?: string }) {
         <button
           onClick={checkHealth}
           disabled={loading || isResetting}
-          className="flex-shrink-0 rounded-lg bg-[var(--color-brand)] px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 transition-all active:scale-95 flex items-center gap-2"
+          className="shrink-0 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 transition-all active:scale-95 flex items-center gap-2"
         >
           {loading ? (
             <>
@@ -181,7 +181,7 @@ export default function SystemHealthCard({ apiKey }: { apiKey?: string }) {
                 </div>
                 <button
                   onClick={handleHardReset}
-                  className="flex-shrink-0 w-full sm:w-auto mt-4 sm:mt-0 rounded-lg bg-red-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:bg-red-500 transition-all active:scale-95 flex items-center justify-center gap-2"
+                  className="shrink-0 w-full sm:w-auto mt-4 sm:mt-0 rounded-lg bg-red-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] hover:bg-red-500 transition-all active:scale-95 flex items-center justify-center gap-2"
                 >
                   ⚠️ Bersihkan & Sinkronisasi Ulang Ingatan AI
                 </button>
@@ -216,7 +216,7 @@ export default function SystemHealthCard({ apiKey }: { apiKey?: string }) {
 
       {/* Modal Real-time Progress (Streaming) */}
       {showResetModal && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 animate-in fade-in duration-300">
           <div className="w-full max-w-2xl rounded-2xl bg-[#111] border border-white/10 shadow-2xl overflow-hidden flex flex-col">
             {/* Header */}
             <div className="border-b border-white/5 p-6 pb-4">

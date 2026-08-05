@@ -282,13 +282,13 @@ export default function KnowledgeTableClient() {
 
       {/* Modal Real-time Progress (Streaming) */}
       {showProgressModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 animate-in fade-in duration-300">
           <div className="w-full max-w-2xl rounded-2xl bg-[#111] border border-white/10 shadow-2xl overflow-hidden flex flex-col">
             {/* Header */}
             <div className="border-b border-white/5 p-6 pb-4">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${isUploadSuccess || uploadProgress === 0 ? 'bg-green-500' : 'bg-[var(--color-brand)] animate-pulse'}`} />
+                  <div className={`h-2 w-2 rounded-full ${isUploadSuccess || uploadProgress === 0 ? 'bg-green-500' : 'bg-brand animate-pulse'}`} />
                   {isUploadSuccess 
                     ? "Proses Selesai!" 
                     : actionType === "upload" 
@@ -300,7 +300,7 @@ export default function KnowledgeTableClient() {
               {/* Progress Bar */}
               <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-[var(--color-brand)] transition-all duration-300 ease-out"
+                  className="h-full bg-brand transition-all duration-300 ease-out"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -354,7 +354,7 @@ export default function KnowledgeTableClient() {
         <button
           onClick={() => handleUploadClick()}
           disabled={isUploading}
-          className={`flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-[var(--color-brand)] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#e07a00] disabled:opacity-50 disabled:cursor-not-allowed`}
+          className={`flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#e07a00] disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {isUploading ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -369,10 +369,10 @@ export default function KnowledgeTableClient() {
       <div className="rounded-xl border border-white/10 bg-white/5 p-1 shadow-lg backdrop-blur-sm">
         <div className="overflow-x-auto w-full rounded-lg ring-1 ring-white/10 shadow-2xl">
           <table className="w-full text-left text-sm text-gray-300">
-            <thead className="bg-[#1a1a1a] text-xs uppercase text-[var(--color-brand)]">
+            <thead className="bg-[#1a1a1a] text-xs uppercase text-brand">
               <tr>
                 <th scope="col" className="px-6 py-4 font-semibold w-16 text-center whitespace-nowrap">No.</th>
-                <th scope="col" className="px-6 py-4 font-semibold min-w-[250px]">Nama Dokumen</th>
+                <th scope="col" className="px-6 py-4 font-semibold min-w-62.5">Nama Dokumen</th>
                 <th scope="col" className="px-6 py-4 font-semibold whitespace-nowrap">Nama File Asli</th>
                 <th scope="col" className="px-6 py-4 font-semibold whitespace-nowrap">Terakhir Diperbarui</th>
                 <th scope="col" className="px-6 py-4 font-semibold w-32 text-center whitespace-nowrap">Aksi</th>
@@ -383,7 +383,7 @@ export default function KnowledgeTableClient() {
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center justify-center gap-2">
-                      <Loader2 className="h-6 w-6 animate-spin text-[var(--color-brand)]" />
+                      <Loader2 className="h-6 w-6 animate-spin text-brand" />
                       <p>Menarik data dari memori AI...</p>
                     </div>
                   </td>
@@ -414,7 +414,7 @@ export default function KnowledgeTableClient() {
                     <td className="px-6 py-4 text-gray-400 font-mono text-xs">
                       <div 
                         onClick={() => handleDownload(doc.id, doc.nama_file_asli || doc.file_url)}
-                        className="truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] cursor-pointer hover:text-[var(--color-brand)] hover:underline transition-colors" 
+                        className="truncate max-w-30 sm:max-w-45 md:max-w-62.5 cursor-pointer hover:text-brand hover:underline transition-colors" 
                         title={`Klik untuk mengunduh: ${doc.nama_file_asli || doc.file_url}`}
                       >
                         {doc.nama_file_asli || doc.file_url}
