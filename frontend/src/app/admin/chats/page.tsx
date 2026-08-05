@@ -30,7 +30,7 @@ export default async function ChatsPage() {
       {/* Header */}
       <div>
         <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
-          <MessageSquare className="h-6 w-6 text-[var(--color-brand)]" />
+          <MessageSquare className="h-6 w-6 text-brand" />
           History Chat
         </h2>
         <p className="mt-2 text-sm text-gray-400">

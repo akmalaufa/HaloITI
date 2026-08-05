@@ -539,14 +539,14 @@ export default function ChatPage() {
     <div className="h-screen w-full bg-[#09090b] flex flex-col items-center relative overflow-hidden">
       
       {/* Latar Belakang Pendaran Oranye (Kiri Atas & Kanan Bawah) */}
-      <div className="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-br from-brand/20 via-transparent to-transparent pointer-events-none opacity-60 z-[110]" />
-      <div className="fixed -bottom-32 -right-32 w-[500px] h-[500px] bg-brand/15 blur-[140px] rounded-full pointer-events-none opacity-80 z-[110]" />
+      <div className="fixed top-0 left-0 w-full h-150 bg-linear-to-br from-brand/20 via-transparent to-transparent pointer-events-none opacity-60 z-110" />
+      <div className="fixed -bottom-32 -right-32 w-125 h-125 bg-brand/15 blur-[140px] rounded-full pointer-events-none opacity-80 z-110" />
       
       {/* ---------------------------------------------------- */}
       {/* MODAL WAJIB WHATSAPP (Overlay) */}
       {/* ---------------------------------------------------- */}
       {!isCheckingAuth && !hasWhatsApp && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-120 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-[#18181b] p-8 rounded-2xl shadow-2xl border border-white/10 w-full max-w-md mx-4 animate-in fade-in zoom-in duration-300">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-white mb-2">Verifikasi WhatsApp</h2>
@@ -597,7 +597,7 @@ export default function ChatPage() {
       {/* ---------------------------------------------------- */}
       {/* HEADER (Full Width, Transparent) */}
       {/* ---------------------------------------------------- */}
-      <header className={`fixed top-0 left-0 w-full h-20 flex items-center justify-between px-6 md:px-10 z-[100] bg-[#09090b] transition-all duration-500 pointer-events-none ${(!isCheckingAuth && !hasWhatsApp) ? 'blur-sm opacity-50' : 'opacity-100'}`}>
+      <header className={`fixed top-0 left-0 w-full h-20 flex items-center justify-between px-6 md:px-10 z-100 bg-[#09090b] transition-all duration-500 pointer-events-none ${(!isCheckingAuth && !hasWhatsApp) ? 'blur-sm opacity-50' : 'opacity-100'}`}>
         {/* Kiri: Logo HALOITI */}
         <Link href="/" className="flex items-center space-x-3 select-none pointer-events-auto hover:opacity-80 transition-opacity cursor-pointer">
           <img src="/favicon.ico" alt="Logo ITI" className="w-8 h-8 object-contain drop-shadow-[0_0_10px_rgba(231,120,23,0.3)] pointer-events-none" />
@@ -616,7 +616,7 @@ export default function ChatPage() {
             </div>
             
             {/* Mobile View: 3 baris rata kiri-kanan (justified sempurna) */}
-            <div className="flex sm:hidden flex-col w-[110px] text-[10px] font-bold uppercase leading-[1.2]">
+            <div className="flex sm:hidden flex-col w-27.5 text-[10px] font-bold uppercase leading-[1.2]">
               <div className="flex justify-between w-full">
                 {"INSTITUT".split("").map((char, i) => <span key={i}>{char}</span>)}
               </div>
@@ -702,14 +702,14 @@ export default function ChatPage() {
         <img 
           src="/favicon.ico" 
           alt="Watermark ITI" 
-          className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] object-contain opacity-[0.04] grayscale" 
+          className="w-75 h-75 md:w-112.5 md:h-112.5 object-contain opacity-[0.04] grayscale" 
         />
       </div>
 
       {/* ---------------------------------------------------- */}
       {/* CHAT ARENA (Hanya aktif jika hasWhatsApp = true) */}
       {/* ---------------------------------------------------- */}
-      <div className={`absolute inset-0 flex flex-col w-full pt-20 transition-all duration-500 z-[10] ${isCheckingAuth ? 'opacity-0' : (!hasWhatsApp ? 'blur-sm pointer-events-none select-none opacity-50' : 'opacity-100')}`}>
+      <div className={`absolute inset-0 flex flex-col w-full pt-20 transition-all duration-500 z-10 ${isCheckingAuth ? 'opacity-0' : (!hasWhatsApp ? 'blur-sm pointer-events-none select-none opacity-50' : 'opacity-100')}`}>
 
         {/* Daftar Pesan (Scrollable Full Width) */}
         <main className={`w-full relative z-10 ${
@@ -740,7 +740,7 @@ export default function ChatPage() {
                   <div className="w-full max-w-4xl mx-auto px-4 md:px-6 pt-6 pb-6">
                     {(isThinking && liveStatus !== "") && (
                       <div className="flex w-full justify-start animate-in fade-in slide-in-from-bottom-2 duration-300">
-                        <div className="bg-[#18181b] border border-brand/30 text-brand px-5 py-3.5 rounded-2xl rounded-tl-sm text-[14px] flex items-center space-x-3 shadow-[0_0_10px_rgba(231,120,23,0.1)]">
+                        <div className="bg-[#18181b] border border-brand/30 text-brand px-5 py-3.5 rounded-2xl rounded-tl-sm text-sm flex items-center space-x-3 shadow-[0_0_10px_rgba(231,120,23,0.1)]">
                           <div className="flex space-x-1">
                             <div className="w-2 h-2 bg-brand rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                             <div className="w-2 h-2 bg-brand rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -770,7 +770,7 @@ export default function ChatPage() {
                   <div className="w-full max-w-4xl mx-auto px-4 md:px-6 pt-6">
                     <div className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
                       <div
-                        className={`max-w-[95%] md:max-w-[85%] lg:max-w-[75%] px-4 md:px-5 py-3.5 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
+                        className={`max-w-[95%] md:max-w-[85%] lg:max-w-3/4 px-4 md:px-5 py-3.5 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
                           msg.role === "user"
                             ? "bg-brand text-white rounded-tr-sm font-medium"
                             : "bg-[#27272a] text-gray-100 border border-white/5 rounded-tl-sm"
@@ -838,7 +838,7 @@ export default function ChatPage() {
                                 return <tbody className="bg-zinc-900/50 divide-y divide-zinc-800" {...props}>{newRows}</tbody>;
                               },
                               tr: ({node, ...props}) => <tr className="hover:bg-zinc-800/40 transition-colors duration-200" {...props} />,
-                              th: ({node, ...props}) => <th className="px-4 py-3 font-semibold border-b border-r border-zinc-700 last:border-r-0 text-center min-w-[100px]" {...props} style={{ ...(props.style || {}), textAlign: 'center' }} />,
+                              th: ({node, ...props}) => <th className="px-4 py-3 font-semibold border-b border-r border-zinc-700 last:border-r-0 text-center min-w-25" {...props} style={{ ...(props.style || {}), textAlign: 'center' }} />,
                               td: ({node, ...props}) => <td className="px-4 py-3 text-zinc-300 border-r border-zinc-700/50 last:border-r-0 text-center" {...props} style={{ ...(props.style || {}), textAlign: 'center' }} />,
                               ul: ({node, ...props}) => <ul className="list-disc list-outside ml-5 mb-4 space-y-1" {...props} />,
                               ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-5 mb-4 space-y-1" {...props} />,
@@ -901,7 +901,7 @@ export default function ChatPage() {
                 placeholder={isThinking ? "Menunggu respons..." : "Tanyakan seputar pendaftaran ITI..."}
                 maxLength={400}
                 disabled={isThinking}
-                className="flex-1 max-h-32 min-h-[44px] bg-transparent text-white px-4 py-2.5 resize-none outline-none placeholder:text-gray-500 text-[15px] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 max-h-32 min-h-11 bg-transparent text-white px-4 py-2.5 resize-none outline-none placeholder:text-gray-500 text-[15px] disabled:opacity-50 disabled:cursor-not-allowed"
                 rows={1}
               />
               {isThinking ? (

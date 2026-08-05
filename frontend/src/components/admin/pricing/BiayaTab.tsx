@@ -263,7 +263,7 @@ export default function BiayaTab() {
     <div className="flex flex-col gap-4 w-full relative">
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-[9999] px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform duration-300 animate-in fade-in slide-in-from-top-4 ${toast.type === "success" ? "bg-emerald-500/90 border border-emerald-400" : "bg-red-500/90 border border-red-400"} text-white backdrop-blur-md`}>
+        <div className={`fixed top-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-9999 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform duration-300 animate-in fade-in slide-in-from-top-4 ${toast.type === "success" ? "bg-emerald-500/90 border border-emerald-400" : "bg-red-500/90 border border-red-400"} text-white backdrop-blur-md`}>
           {toast.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
           <span className="font-medium text-sm">{toast.message}</span>
         </div>
@@ -279,7 +279,7 @@ export default function BiayaTab() {
                 onClick={() => { setFilterSistem(sys); setCurrentPage(1); }}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   filterSistem === sys 
-                    ? "bg-[var(--color-brand)] text-white shadow-md shadow-[var(--color-brand)]/20 border border-[var(--color-brand)]" 
+                    ? "bg-brand text-white shadow-md shadow-brand/20 border border-brand" 
                     : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
                 }`}
               >
@@ -290,7 +290,7 @@ export default function BiayaTab() {
         </div>
         <div className="flex gap-4 items-center">
           <select 
-            className="bg-[#1a1a1a] border border-white/10 text-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-brand)]"
+            className="bg-[#1a1a1a] border border-white/10 text-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand"
             value={filterProdi}
             onChange={(e) => {
               setFilterProdi(e.target.value);
@@ -304,7 +304,7 @@ export default function BiayaTab() {
           </select>
           <button
             onClick={openAddModal}
-            className="flex items-center gap-2 rounded-lg bg-[var(--color-brand)] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00]"
+            className="flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00]"
           >
             <Plus className="h-4 w-4" />
             Atur Biaya Baru
@@ -315,7 +315,7 @@ export default function BiayaTab() {
       <div className="rounded-xl border border-white/10 bg-white/5 p-1 shadow-lg backdrop-blur-sm relative">
         <div className="overflow-x-auto w-full rounded-lg ring-1 ring-white/10">
           <table className="w-full text-left text-sm text-gray-300">
-            <thead className="bg-[#1a1a1a] text-xs uppercase text-[var(--color-brand)]">
+            <thead className="bg-[#1a1a1a] text-xs uppercase text-brand">
               <tr>
                 <th scope="col" className="px-6 py-4 font-semibold shadow-[2px_0_5px_-2px_rgba(0,0,0,0.5)] bg-[#1a1a1a]">Program Studi & Jalur</th>
                 <th scope="col" className="px-6 py-4 font-semibold text-center border-l border-white/5 bg-[#121212]">Biaya Pra-Kuliah</th>
@@ -328,7 +328,7 @@ export default function BiayaTab() {
               {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                    <Loader2 className="h-6 w-6 animate-spin text-[var(--color-brand)] mx-auto mb-2" />
+                    <Loader2 className="h-6 w-6 animate-spin text-brand mx-auto mb-2" />
                     Menarik data engine harga...
                   </td>
                 </tr>
@@ -359,7 +359,7 @@ export default function BiayaTab() {
                     
                     <td className="px-6 py-4 border-l border-white/5 bg-[#151515]/50 align-top">
                       <div className="flex flex-col gap-1.5 text-sm w-56 mx-auto">
-                        <div className="flex justify-between items-center gap-2"><span className="text-gray-400">UPP (Pangkal):</span> <span className="text-[var(--color-brand)] font-medium">{formatRupiah(biaya.upp_nominal)}</span></div>
+                        <div className="flex justify-between items-center gap-2"><span className="text-gray-400">UPP (Pangkal):</span> <span className="text-brand font-medium">{formatRupiah(biaya.upp_nominal)}</span></div>
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">UKT (Semester):</span> <span className="text-green-400 font-medium">{formatRupiah(biaya.ukt_nominal)}</span></div>
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">SKS (Min-Max):</span> <span className="text-gray-300">{biaya.sks_min > 0 || biaya.sks_max > 0 ? `${biaya.sks_min} - ${biaya.sks_max}` : "-"}</span></div>
                       </div>
@@ -475,13 +475,13 @@ export default function BiayaTab() {
               )}
               {/* SECTION 1: IDENTITAS */}
               <div className="flex flex-col gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
-                <h4 className="text-[var(--color-brand)] font-semibold text-sm uppercase tracking-wider mb-2">1. Identitas Program Studi & Periode</h4>
+                <h4 className="text-brand font-semibold text-sm uppercase tracking-wider mb-2">1. Identitas Program Studi & Periode</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-gray-300">Program Studi</label>
                     <select
                       required
-                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                       value={formData.id_prodi}
                       onChange={(e) => setFormData({...formData, id_prodi: parseInt(e.target.value)})}
                     >
@@ -495,7 +495,7 @@ export default function BiayaTab() {
                     <label className="text-sm font-medium text-gray-300">Periode Pendaftaran</label>
                     <select
                       required
-                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                       value={formData.id_periode}
                       onChange={(e) => setFormData({...formData, id_periode: parseInt(e.target.value)})}
                     >
@@ -509,7 +509,7 @@ export default function BiayaTab() {
                     <label className="text-sm font-medium text-gray-300">Kelas</label>
                     <select
                       required
-                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                       value={formData.kelas}
                       onChange={(e) => setFormData({...formData, kelas: e.target.value})}
                     >
@@ -522,7 +522,7 @@ export default function BiayaTab() {
                     <label className="text-sm font-medium text-gray-300">Jenis Jalur (Opsional)</label>
                     <input
                       type="text"
-                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                      className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                       placeholder="Contoh: Prestasi, USM, dsb"
                       value={formData.jenis_jalur || ""}
                       onChange={(e) => setFormData({...formData, jenis_jalur: e.target.value})}
@@ -533,7 +533,7 @@ export default function BiayaTab() {
 
               {/* SECTION 2: BIAYA DASAR */}
               <div className="flex flex-col gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
-                <h4 className="text-[var(--color-brand)] font-semibold text-sm uppercase tracking-wider mb-2">2. Biaya Dasar & Pokok (Rp)</h4>
+                <h4 className="text-brand font-semibold text-sm uppercase tracking-wider mb-2">2. Biaya Dasar & Pokok (Rp)</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-gray-300">Biaya Formulir</label>
@@ -549,14 +549,14 @@ export default function BiayaTab() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 p-4 bg-[var(--color-brand)]/10 rounded-lg border border-[var(--color-brand)]/20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 p-4 bg-brand/10 rounded-lg border border-brand/20">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-[var(--color-brand)]">UPP (Uang Pangkal)</label>
-                    <input type="number" required className="w-full rounded-lg bg-[#1a1a1a] border border-[var(--color-brand)]/30 px-4 py-3 text-white font-semibold text-lg" value={formData.upp_nominal || ""} placeholder="0" onChange={(e) => handleNumericChange(e, "upp_nominal")} />
+                    <label className="text-sm font-medium text-brand">UPP (Uang Pangkal)</label>
+                    <input type="number" required className="w-full rounded-lg bg-[#1a1a1a] border border-brand/30 px-4 py-3 text-white font-semibold text-lg" value={formData.upp_nominal || ""} placeholder="0" onChange={(e) => handleNumericChange(e, "upp_nominal")} />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-[var(--color-brand)]">UKT (Per Semester)</label>
-                    <input type="number" required className="w-full rounded-lg bg-[#1a1a1a] border border-[var(--color-brand)]/30 px-4 py-3 text-white font-semibold text-lg" value={formData.ukt_nominal || ""} placeholder="0" onChange={(e) => handleNumericChange(e, "ukt_nominal")} />
+                    <label className="text-sm font-medium text-brand">UKT (Per Semester)</label>
+                    <input type="number" required className="w-full rounded-lg bg-[#1a1a1a] border border-brand/30 px-4 py-3 text-white font-semibold text-lg" value={formData.ukt_nominal || ""} placeholder="0" onChange={(e) => handleNumericChange(e, "ukt_nominal")} />
                   </div>
                 </div>
 
@@ -574,7 +574,7 @@ export default function BiayaTab() {
 
               {/* SECTION 3: DISKON */}
               <div className="flex flex-col gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
-                <h4 className="text-[var(--color-brand)] font-semibold text-sm uppercase tracking-wider mb-2">3. Diskon & Potongan (Rp)</h4>
+                <h4 className="text-brand font-semibold text-sm uppercase tracking-wider mb-2">3. Diskon & Potongan (Rp)</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-gray-300">Potongan Full Payment</label>
@@ -597,7 +597,7 @@ export default function BiayaTab() {
 
               {/* SECTION 4: SERTIFIKASI PSPPI */}
               <div className="flex flex-col gap-4 bg-white/5 p-4 rounded-xl border border-white/5 opacity-80">
-                <div className="flex gap-2 items-center text-[var(--color-brand)] mb-2">
+                <div className="flex gap-2 items-center text-brand mb-2">
                   <Info className="h-4 w-4" />
                   <h4 className="font-semibold text-sm uppercase tracking-wider">4. Khusus Program Profesi (PSPPI)</h4>
                 </div>
@@ -631,7 +631,7 @@ export default function BiayaTab() {
                 type="submit"
                 onClick={handleSave}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[var(--color-brand)] font-medium text-white hover:bg-[#e07a00] transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-brand font-medium text-white hover:bg-[#e07a00] transition-all disabled:opacity-50"
               >
                 {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : null}
                 Simpan & Sinkronisasi ke AI

@@ -19,13 +19,13 @@ from app.tools.supabase_tool import supabase_client
 
 try:
     # Download dari Supabase Storage (Cloud-Native) saat server baru menyala
-    print("☁️ [Pinecone Tool] Mengunduh bm25_params.json dari Supabase Storage...")
+    print("[Pinecone Tool] Mengunduh bm25_params.json dari Supabase Storage...")
     response = supabase_client.storage.from_("knowledge_files").download("bm25_params.json")
     with open(bm25_path, "wb") as f:
         f.write(response)
-    print("✅ [Pinecone Tool] Berhasil mengunduh bm25_params.json dari Supabase!")
+    print("[Pinecone Tool] Berhasil mengunduh bm25_params.json dari Supabase!")
 except Exception as e:
-    print(f"⚠️ [Pinecone Tool] Gagal mengunduh dari Supabase (Mungkin file belum ada): {e}")
+    print(f"[Pinecone Tool] Gagal mengunduh dari Supabase (Mungkin file belum ada): {e}")
 
 try:
     bm25 = BM25Encoder().load(bm25_path)
@@ -45,7 +45,7 @@ async def search_pinecone(query: str, prodi_terkait: str = None, top_k: int = 10
         if prodi_terkait:
             query = f"{query} untuk prodi {prodi_terkait}"
             
-        print(f"🔍 [Pinecone Tool] Mencari dokumen untuk: '{query}'")
+        print(f"[Pinecone Tool] Mencari dokumen untuk: '{query}'")
         
         # A. Bikin Dense Vector (Memahami Makna)
         # Pakai model text-embedding-004 bawaan Google GenAI terbaru
@@ -88,7 +88,7 @@ async def search_pinecone(query: str, prodi_terkait: str = None, top_k: int = 10
         return final_context
         
     except Exception as e:
-        print(f"❌ [Pinecone Tool] Error: {e}")
+        print(f"[Pinecone Tool] Error: {e}")
         return "DATA_TIDAK_DITEMUKAN"
 
 
@@ -106,7 +106,7 @@ async def sync_pinecone_knowledge():
     import time
     from sqlalchemy import text
     
-    print("🔄 [Sync] Memulai Sinkronisasi Global Pinecone...")
+    print("[Sync] Memulai Sinkronisasi Global Pinecone...")
     yield json.dumps({"progress": 91, "message": "Menarik data potongan teks dari SQL Database...", "status": "processing"}) + "\n"
     
 
@@ -131,13 +131,13 @@ async def sync_pinecone_knowledge():
             break  # Jika sukses, keluar dari loop retry
         except Exception as e:
             if attempt < max_retries - 1:
-                print(f"⚠️ [Sync] Koneksi SQL gagal/timeout (Attempt {attempt+1}/{max_retries}). Menunggu sebelum retry...")
+                print(f"[Sync] Koneksi SQL gagal/timeout (Attempt {attempt+1}/{max_retries}). Menunggu sebelum retry...")
                 await asyncio.sleep(2)
             else:
                 raise e # Lemparkan error jika sudah maksimal
         
     if not rows:
-        print("⚠️ [Sync] SQL Kosong. Menghapus seluruh isi Pinecone...")
+        print("[Sync] SQL Kosong. Menghapus seluruh isi Pinecone...")
         pinecone_index.delete(delete_all=True)
         # Bikin BM25 kosong
         global bm25
@@ -148,17 +148,17 @@ async def sync_pinecone_knowledge():
         import os
         if os.path.exists(bm25_path):
             os.remove(bm25_path)
-            print("🗑️ [Sync] File bm25_params.json lokal dihapus karena SQL kosong.")
+            print("[Sync] File bm25_params.json lokal dihapus karena SQL kosong.")
         # Hapus file dari Supabase Storage juga
         try:
             supabase_client.storage.from_("knowledge_files").remove(["bm25_params.json"])
-            print("🗑️☁️ [Sync] File bm25_params.json berhasil dihapus dari Supabase Storage.")
+            print("[Sync] File bm25_params.json berhasil dihapus dari Supabase Storage.")
         except Exception as e:
-            print(f"⚠️☁️ [Sync] Gagal menghapus file dari Supabase: {e}")
+            print(f"[Sync] Gagal menghapus file dari Supabase: {e}")
         return
         
     # 2. Re-train BM25
-    print(f"🧠 [Sync] Melatih ulang otak BM25 dari {len(rows)} potongan teks...")
+    print(f"[Sync] Melatih ulang otak BM25 dari {len(rows)} potongan teks...")
     yield json.dumps({"progress": 92, "message": f"Melatih ulang otak BM25 dari {len(rows)} potongan teks...", "status": "processing"}) + "\n"
     
     corpus_texts = [f"{r[5]} - {r[2]}\n{r[3]}" for r in rows]
@@ -175,12 +175,12 @@ async def sync_pinecone_knowledge():
                 path="bm25_params.json",
                 file_options={"content-type": "application/json", "upsert": "true"}
             )
-        print("☁️✅ [Sync] File bm25_params.json berhasil di-backup ke Supabase Storage!")
+        print("[Sync] File bm25_params.json berhasil di-backup ke Supabase Storage!")
     except Exception as e:
-        print(f"☁️⚠️ [Sync] Gagal mem-backup bm25_params.json ke Supabase: {e}")
+        print(f"[Sync] Gagal mem-backup bm25_params.json ke Supabase: {e}")
     
     # 3. Rakit Peluru Pinecone
-    print("🚀 [Sync] Merakit Vector dan Upsert Massal ke Pinecone...")
+    print("[Sync] Merakit Vector dan Upsert Massal ke Pinecone...")
     yield json.dumps({"progress": 93, "message": "Merakit Vektor dan menyuntikkan ke Pinecone...", "status": "processing"}) + "\n"
     batch_size = 50
     vectors_to_upsert = []
@@ -221,4 +221,4 @@ async def sync_pinecone_knowledge():
         pinecone_index.upsert(vectors=batch)
         time.sleep(1) # Jeda nafas API
         
-    print(f"✅ [Sync] Berhasil meng-upsert {len(vectors_to_upsert)} chunks ke Pinecone!")
+    print(f"[Sync] Berhasil meng-upsert {len(vectors_to_upsert)} chunks ke Pinecone!")

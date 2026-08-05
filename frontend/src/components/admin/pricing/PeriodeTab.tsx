@@ -199,7 +199,7 @@ export default function PeriodeTab() {
     <div className="flex flex-col gap-4 w-full relative">
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-[9999] px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform duration-300 animate-in fade-in slide-in-from-top-4 ${toast.type === "success" ? "bg-emerald-500/90 border border-emerald-400" : "bg-red-500/90 border border-red-400"} text-white backdrop-blur-md`}>
+        <div className={`fixed top-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-9999 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all transform duration-300 animate-in fade-in slide-in-from-top-4 ${toast.type === "success" ? "bg-emerald-500/90 border border-emerald-400" : "bg-red-500/90 border border-red-400"} text-white backdrop-blur-md`}>
           {toast.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
           <span className="font-medium text-sm">{toast.message}</span>
         </div>
@@ -215,7 +215,7 @@ export default function PeriodeTab() {
                 onClick={() => { setFilterSistem(sys); setCurrentPage(1); }}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   filterSistem === sys 
-                    ? "bg-[var(--color-brand)] text-white shadow-md shadow-[var(--color-brand)]/20 border border-[var(--color-brand)]" 
+                    ? "bg-brand text-white shadow-md shadow-brand/20 border border-brand" 
                     : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
                 }`}
               >
@@ -226,7 +226,7 @@ export default function PeriodeTab() {
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 rounded-lg bg-[var(--color-brand)] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00] shrink-0"
+          className="flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00] shrink-0"
         >
           <Plus className="h-4 w-4" />
           Tambah Periode
@@ -236,7 +236,7 @@ export default function PeriodeTab() {
       <div className="rounded-xl border border-white/10 bg-white/5 p-1 shadow-lg backdrop-blur-sm">
         <div className="overflow-x-auto w-full rounded-lg ring-1 ring-white/10">
           <table className="w-full text-left text-sm text-gray-300">
-            <thead className="bg-[#1a1a1a] text-xs uppercase text-[var(--color-brand)]">
+            <thead className="bg-[#1a1a1a] text-xs uppercase text-brand">
               <tr>
                 <th scope="col" className="px-6 py-4 font-semibold w-16 text-center">No.</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Sistem</th>
@@ -250,7 +250,7 @@ export default function PeriodeTab() {
               {isLoading ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                    <Loader2 className="h-6 w-6 animate-spin text-[var(--color-brand)] mx-auto mb-2" />
+                    <Loader2 className="h-6 w-6 animate-spin text-brand mx-auto mb-2" />
                     Memuat data...
                   </td>
                 </tr>
@@ -371,7 +371,7 @@ export default function PeriodeTab() {
                   <label className="text-sm font-medium text-gray-300">Sistem</label>
                   <select
                     required
-                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                     value={formData.sistem}
                     onChange={(e) => setFormData({...formData, sistem: e.target.value})}
                   >
@@ -387,7 +387,7 @@ export default function PeriodeTab() {
                     type="number"
                     min="1"
                     required
-                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                     placeholder="Contoh: 1"
                     value={formData.gelombang || ""}
                     onChange={(e) => setFormData({...formData, gelombang: parseInt(e.target.value) || 1})}
@@ -400,7 +400,7 @@ export default function PeriodeTab() {
                 <input
                   type="text"
                   required
-                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                   placeholder="Contoh: Jalur Undangan (Prestasi)"
                   value={formData.nama_jalur}
                   onChange={(e) => setFormData({...formData, nama_jalur: e.target.value})}
@@ -413,7 +413,7 @@ export default function PeriodeTab() {
                   <input
                     type="date"
                     required
-                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                     value={formData.tgl_buka}
                     onChange={(e) => setFormData({...formData, tgl_buka: e.target.value})}
                   />
@@ -423,7 +423,7 @@ export default function PeriodeTab() {
                   <input
                     type="date"
                     required
-                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                    className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                     value={formData.tgl_tutup}
                     onChange={(e) => setFormData({...formData, tgl_tutup: e.target.value})}
                   />
@@ -434,7 +434,7 @@ export default function PeriodeTab() {
                 <label className="text-sm font-medium text-gray-300">Link Pendaftaran (Opsional)</label>
                 <input
                   type="url"
-                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] transition-all"
+                  className="w-full rounded-lg bg-[#1a1a1a] border border-white/10 px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand transition-all"
                   placeholder="Contoh: https://pmb.iti.ac.id/reguler"
                   value={formData.link_pendaftaran || ""}
                   onChange={(e) => setFormData({...formData, link_pendaftaran: e.target.value})}
@@ -452,7 +452,7 @@ export default function PeriodeTab() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-brand)] font-medium text-white hover:bg-[#e07a00] transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand font-medium text-white hover:bg-[#e07a00] transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                   Simpan Periode
