@@ -98,9 +98,9 @@ export default function BiayaTab() {
       const headers = { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" };
       
       const [resBiaya, resProdi, resPeriode] = await Promise.all([
-        fetch("http://127.0.0.1:8000/api/admin/biaya", { headers }),
-        fetch("http://127.0.0.1:8000/api/admin/prodi", { headers }),
-        fetch("http://127.0.0.1:8000/api/admin/periode", { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/biaya`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/prodi`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/periode`, { headers }),
       ]);
       
       if (resBiaya.ok) {
@@ -173,8 +173,8 @@ export default function BiayaTab() {
     setIsSubmitting(true);
     try {
       const url = isEditMode 
-        ? `http://127.0.0.1:8000/api/admin/biaya/${formData.id_biaya}`
-        : `http://127.0.0.1:8000/api/admin/biaya`;
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/biaya/${formData.id_biaya}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/biaya`;
       
       const method = isEditMode ? "PUT" : "POST";
       
@@ -214,7 +214,7 @@ export default function BiayaTab() {
     setIsSubmitting(true);
     setErrorMessage(null);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/biaya/${biayaToDelete.id_biaya}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/biaya/${biayaToDelete.id_biaya}`, {
         method: "DELETE",
         headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" },
       });

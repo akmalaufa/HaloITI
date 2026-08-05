@@ -54,7 +54,7 @@ export default function PeriodeTab() {
   const fetchPeriode = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/admin/periode", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/periode`, {
         headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" },
       });
       if (res.ok) {
@@ -112,8 +112,8 @@ export default function PeriodeTab() {
     setIsSubmitting(true);
     try {
       const url = isEditMode 
-        ? `http://127.0.0.1:8000/api/admin/periode/${formData.id_periode}`
-        : `http://127.0.0.1:8000/api/admin/periode`;
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/periode/${formData.id_periode}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/periode`;
       
       const method = isEditMode ? "PUT" : "POST";
       
@@ -153,7 +153,7 @@ export default function PeriodeTab() {
     setIsSubmitting(true);
     setErrorMessage(null);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/periode/${periodeToDelete.id_periode}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/periode/${periodeToDelete.id_periode}`, {
         method: "DELETE",
         headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" },
       });

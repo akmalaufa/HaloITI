@@ -46,7 +46,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/admin/leads', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/leads`, {
           headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" }
         });
         if (res.ok) {
@@ -72,7 +72,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
     const fetchChats = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/admin/chat-logs/${selectedLead}?limit=20&offset=0`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/chat-logs/${selectedLead}?limit=20&offset=0`, {
           headers: {
             "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || ""
           }
@@ -103,7 +103,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
 
     const pollNewChats = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/admin/chat-logs/${selectedLead}?limit=10&offset=0`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/chat-logs/${selectedLead}?limit=10&offset=0`, {
           headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" }
         });
         if (!res.ok) return;
@@ -143,7 +143,7 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
     
     setIsLoadingMore(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/chat-logs/${selectedLead}?limit=20&offset=${offset}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/chat-logs/${selectedLead}?limit=20&offset=${offset}`, {
         headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" }
       });
       if (!res.ok) throw new Error("Gagal mengambil riwayat chat");

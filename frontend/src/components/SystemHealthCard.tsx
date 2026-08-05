@@ -44,7 +44,7 @@ export default function SystemHealthCard({ apiKey }: { apiKey?: string }) {
     setData(null);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/admin/knowledge/health', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/knowledge/health`, {
         headers: {
           'X-API-Key': apiKey || ''
         }
@@ -70,7 +70,7 @@ export default function SystemHealthCard({ apiKey }: { apiKey?: string }) {
     setResetLogs([]);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/admin/knowledge/hard-reset', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/knowledge/hard-reset`, {
         method: 'POST',
         headers: { 'X-API-Key': apiKey || '' }
       });

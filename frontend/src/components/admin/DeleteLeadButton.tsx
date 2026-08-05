@@ -18,7 +18,7 @@ export default function DeleteLeadButton({ idLead, nama }: { idLead: string, nam
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/leads/${idLead}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/leads/${idLead}`, {
         method: "DELETE",
         headers: {
           "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || ""
