@@ -148,7 +148,7 @@ export default function ChatPage() {
                 token = data.access_token;
                 localStorage.setItem("access_token", data.access_token);
                 setHasWhatsApp(true);
-                await fetchHistory(token);
+                await fetchHistory(data.access_token);
               }
             }
           } catch (e) {
@@ -168,7 +168,7 @@ export default function ChatPage() {
                 if (data.access_token) {
                   token = data.access_token;
                   localStorage.setItem("access_token", data.access_token);
-                  await fetchHistory(token);
+                  await fetchHistory(data.access_token);
                 } else {
                   // Jika Backend membalas 'need_whatsapp' (Berarti user udah kehapus di DB)
                   localStorage.removeItem("access_token");
