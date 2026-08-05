@@ -146,7 +146,7 @@ export default function ChatPage() {
               const data = await res.json();
               if (data.access_token) {
                 token = data.access_token;
-                localStorage.setItem("access_token", token);
+                localStorage.setItem("access_token", data.access_token);
                 setHasWhatsApp(true);
                 await fetchHistory(token);
               }
@@ -167,7 +167,7 @@ export default function ChatPage() {
                 const data = await renewRes.json();
                 if (data.access_token) {
                   token = data.access_token;
-                  localStorage.setItem("access_token", token);
+                  localStorage.setItem("access_token", data.access_token);
                   await fetchHistory(token);
                 } else {
                   // Jika Backend membalas 'need_whatsapp' (Berarti user udah kehapus di DB)
@@ -377,7 +377,7 @@ export default function ChatPage() {
           const renewData = await renewRes.json();
           if (renewData.access_token) {
             token = renewData.access_token;
-            localStorage.setItem("access_token", token);
+            localStorage.setItem("access_token", renewData.access_token);
             // Re-fetch chat API
             res = await fetch(`${apiUrl}/api/chat/`, {
               method: "POST",
