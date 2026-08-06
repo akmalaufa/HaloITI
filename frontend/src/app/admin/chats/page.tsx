@@ -7,7 +7,7 @@ export const metadata = {
 
 async function getLeads() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/leads`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/leads`, {
       cache: 'no-store',
       headers: {
         'X-API-Key': process.env.X_API_KEY || ''
