@@ -1,5 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
+import nltk
+
+# 0. INJEKSI NLTK DATA (Mencegah error punkt_tab di VPS)
+custom_nltk_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "nltk_data")
+os.makedirs(custom_nltk_dir, exist_ok=True)
+os.environ["NLTK_DATA"] = custom_nltk_dir # <--- Injeksi ke OS ENVIRON (SANGAT PENTING!)
+
+if custom_nltk_dir not in nltk.data.path:
+    nltk.data.path.append(custom_nltk_dir)
+
+try:
+    nltk.download('punkt', download_dir=custom_nltk_dir, quiet=True)
+    nltk.download('punkt_tab', download_dir=custom_nltk_dir, quiet=True)
+except Exception:
+    pass
 from app.core.config import settings
 from app.api import chat
 from app.api import leads
