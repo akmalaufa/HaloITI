@@ -33,7 +33,7 @@ export default function KnowledgeTableClient() {
   const fetchDocs = async () => {
     setIsLoadingData(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/knowledge/dokumen`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/knowledge/dokumen`, {
         headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" }
       });
       if (res.ok) {
@@ -80,7 +80,7 @@ export default function KnowledgeTableClient() {
         }
 
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/knowledge/upload`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/knowledge/upload`, {
             method: "POST",
             headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" },
             body: formData,
@@ -141,7 +141,7 @@ export default function KnowledgeTableClient() {
   // Fungsi Hapus Dokumen (Terintegrasi ke Backend Streaming)
   const handleDownload = async (id: string, namaFileAsli: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/knowledge/dokumen/${id}/download`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/knowledge/dokumen/${id}/download`, {
         headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" }
       });
       
@@ -174,7 +174,7 @@ export default function KnowledgeTableClient() {
     setShowProgressModal(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/knowledge/dokumen/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/knowledge/dokumen/${id}`, {
         method: "DELETE",
         headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" }
       });

@@ -40,7 +40,7 @@ export default function ProdiTab() {
   const fetchProdi = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/prodi`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/prodi`, {
         headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" },
       });
       if (res.ok) {
@@ -77,8 +77,8 @@ export default function ProdiTab() {
     setIsSubmitting(true);
     try {
       const url = isEditMode 
-        ? `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/prodi/${formData.id_prodi}`
-        : `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/prodi`;
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/admin/prodi/${formData.id_prodi}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/api/admin/prodi`;
       
       const method = isEditMode ? "PUT" : "POST";
       
@@ -119,7 +119,7 @@ export default function ProdiTab() {
     setIsSubmitting(true);
     setErrorMessage(null);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/prodi/${prodiToDelete.id_prodi}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/prodi/${prodiToDelete.id_prodi}`, {
         method: "DELETE",
         headers: { "X-API-Key": process.env.NEXT_PUBLIC_X_API_KEY || "" },
       });

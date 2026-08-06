@@ -21,7 +21,7 @@ export default function LeadsTableClient({ initialLeads }: { initialLeads: Lead[
     const fetchLeads = async () => {
       try {
         const offset = (currentPage - 1) * 20;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/api/admin/leads?limit=20&offset=${offset}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/leads?limit=20&offset=${offset}`, {
           headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" }
         });
         if (res.ok) {
