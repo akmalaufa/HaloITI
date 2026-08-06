@@ -35,3 +35,6 @@ Scrapling_data/data_unstructured/
 # Limbah Pipeline Embedding
 backend/data_pipeline_embedding/*.json
 backend/data_pipeline_embedding/chunks_output/
+
+# Testing
+backend/tests/
