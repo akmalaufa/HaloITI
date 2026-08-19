@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # -----------------------------------------------------
+  # 1. KAMAR BACKEND (Ambil dari Docker Hub)
+  # -----------------------------------------------------
+  backend:
+    image: akmalaufa/project_ta-backend:latest
+    container_name: pmb_backend
+    
+    ports:
+      - "8000:8000"
+      
+    # Di VPS, file rahasia ditaruh sejajar dengan docker-compose
+    env_file:
+      - .env
+      
+    networks:
+      - pmb_network
+      
+    restart: always
+
+  # -----------------------------------------------------
+  # 2. KAMAR FRONTEND (Ambil dari Docker Hub)
+  # -----------------------------------------------------
+  frontend:
+    image: akmalaufa/project_ta-frontend:latest
+    container_name: pmb_frontend
+    
+    ports:
+      - "3000:3000"
+      
+    # Di VPS, file rahasia ditaruh sejajar dengan docker-compose
+    env_file:
+      - .env
+      
+    environment:
+      - INTERNAL_API_URL=http://backend:8000
+      
+    depends_on:
+      - backend
+      
+    networks:
+      - pmb_network
+      
+    restart: always
+
+networks:
+  pmb_network:
+    driver: bridge

@@ -34,7 +34,8 @@ ATURAN SQL:
 
 class CekBiayaRegulerSchema(BaseModel):
     """
-    PILIH ALAT INI KHUSUS untuk mencari informasi nominal biaya (UKT, UPP, Formulir) mahasiswa S1 REGULER.
+    PILIH ALAT INI KHUSUS untuk mencari informasi nominal biaya (UKT, UPP, Formulir) mahasiswa S1 REGULER untuk prodi spesifik (boleh lebih dari satu prodi).
+    JANGAN PILIH ALAT INI jika pengguna meminta perbandingan (komparasi), mencari prodi termurah/termahal lintas prodi, atau bertanya tentang rata-rata biaya. (Gunakan CekAnalitikGlobalSchema untuk itu).
     """
     prodi: str = Field(
         ..., 
@@ -51,7 +52,8 @@ class CekBiayaRegulerSchema(BaseModel):
 
 class CekBiayaRPLSchema(BaseModel):
     """
-    PILIH ALAT INI KHUSUS untuk mencari informasi nominal biaya (Biaya per SKS, UPP, Asesmen) mahasiswa jalur RPL (Rekognisi Pembelajaran Lampau).
+    PILIH ALAT INI KHUSUS untuk mencari informasi nominal biaya (Biaya per SKS, UPP, Asesmen) mahasiswa jalur RPL (Rekognisi Pembelajaran Lampau) untuk prodi spesifik (boleh lebih dari satu prodi).
+    JANGAN PILIH ALAT INI jika pengguna meminta perbandingan (komparasi), mencari prodi termurah/termahal lintas prodi, atau bertanya tentang rata-rata biaya. (Gunakan CekAnalitikGlobalSchema untuk itu).
     """
     prodi: str = Field(
         ..., 
@@ -69,6 +71,7 @@ class CekBiayaRPLSchema(BaseModel):
 class CekBiayaPSPPISchema(BaseModel):
     """
     PILIH ALAT INI KHUSUS untuk mencari informasi nominal biaya Program Profesi Insinyur (PSPPI).
+    JANGAN PILIH ALAT INI jika pengguna meminta perbandingan (komparasi) lintas prodi atau agregasi data.
     """
     prodi: str = Field(
         "Program Profesi Insinyur", 
@@ -107,8 +110,9 @@ class CekJadwalPMBSchema(BaseModel):
 class CekAnalitikGlobalSchema(BaseModel):
     """
     PILIH ALAT INI KHUSUS jika pengguna menanyakan komparasi atau analitik agregat lintas prodi/sistem.
+    (BAHKAN JIKA user menyebutkan kata 'Reguler' atau 'RPL', TETAP GUNAKAN ALAT INI jika pertanyaannya adalah komparasi lintas prodi).
     Contoh kasus penggunaan alat ini: 
-    - 'Sebutkan 3 prodi dengan UKT paling murah'
+    - 'Sebutkan 3 prodi dengan UKT paling murah jalur reguler'
     - 'Berapa rata-rata uang pangkal di ITI'
     - 'Prodi apa saja yang menyediakan kelas Weekend'
     """

@@ -31,9 +31,16 @@ export async function POST(req: Request) {
     };
 
     // 4. Telepon Merah: Kirim request ke FastAPI dengan X-API-KEY
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-    // Hati-hati, gunakan env internal untuk X-API-KEY agar aman
-    const xApiKey = process.env.X_API_KEY || "SuperSecretITI2026";
+    // Gunakan INTERNAL_API_URL (Docker network) jika ada, jika tidak jatuh ke NEXT_PUBLIC_API_URL
+    const backendUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
+    const xApiKey = process.env.X_API_KEY;
+
+    if (!backendUrl) {
+      throw new Error("CRITICAL: URL Backend tidak ditemukan di environment!");
+    }
+    if (!xApiKey) {
+      throw new Error("CRITICAL: X_API_KEY tidak ditemukan di environment!");
+    }
 
     const response = await fetch(`${backendUrl}/api/leads/`, {
       method: "POST",
