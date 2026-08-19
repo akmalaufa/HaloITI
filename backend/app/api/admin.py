@@ -1064,7 +1064,14 @@ async def verify_knowledge_health():
         
         # Pinecone Vectors
         pinecone_stats = pinecone_index.describe_index_stats()
-        pinecone_vectors = pinecone_stats.total_vector_count
+        
+        # FIX: Ambil HANYA dari namespace utama (''), abaikan namespace 'cache'
+        namespaces_dict = getattr(pinecone_stats, 'namespaces', {})
+        if isinstance(namespaces_dict, dict) and '' in namespaces_dict:
+            default_ns = namespaces_dict['']
+            pinecone_vectors = getattr(default_ns, 'vector_count', 0) if hasattr(default_ns, 'vector_count') else default_ns.get('vector_count', 0)
+        else:
+            pinecone_vectors = 0
         
         # CROSS CHECK 1: SQL vs Storage
         for sql_f in sql_filenames.keys():

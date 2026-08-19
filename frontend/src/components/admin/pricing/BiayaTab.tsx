@@ -288,9 +288,9 @@ export default function BiayaTab() {
             ))}
           </div>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full md:w-auto">
           <select 
-            className="bg-[#1a1a1a] border border-white/10 text-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand"
+            className="bg-[#1a1a1a] w-full sm:w-auto border border-white/10 text-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand"
             value={filterProdi}
             onChange={(e) => {
               setFilterProdi(e.target.value);
@@ -304,7 +304,7 @@ export default function BiayaTab() {
           </select>
           <button
             onClick={openAddModal}
-            className="flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00]"
+            className="flex items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[#e07a00] w-full sm:w-auto shrink-0"
           >
             <Plus className="h-4 w-4" />
             Atur Biaya Baru
@@ -362,6 +362,21 @@ export default function BiayaTab() {
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">UPP (Pangkal):</span> <span className="text-brand font-medium">{formatRupiah(biaya.upp_nominal)}</span></div>
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">UKT (Semester):</span> <span className="text-green-400 font-medium">{formatRupiah(biaya.ukt_nominal)}</span></div>
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">SKS (Min-Max):</span> <span className="text-gray-300">{biaya.sks_min > 0 || biaya.sks_max > 0 ? `${biaya.sks_min} - ${biaya.sks_max}` : "-"}</span></div>
+                        
+                        {/* Biaya Sertifikasi Khusus PSPPI */}
+                        {(biaya.biaya_sertifikasi_pratama > 0 || biaya.biaya_sertifikasi_madya > 0 || biaya.biaya_sertifikasi_utama > 0) && (
+                          <div className="mt-1.5 pt-1.5 border-t border-white/10 flex flex-col gap-1.5">
+                            {biaya.biaya_sertifikasi_pratama > 0 && (
+                              <div className="flex justify-between items-center gap-2"><span className="text-gray-400 text-xs">Sert. IPP:</span> <span className="text-amber-400 font-medium">{formatRupiah(biaya.biaya_sertifikasi_pratama)}</span></div>
+                            )}
+                            {biaya.biaya_sertifikasi_madya > 0 && (
+                              <div className="flex justify-between items-center gap-2"><span className="text-gray-400 text-xs">Sert. IPM:</span> <span className="text-amber-400 font-medium">{formatRupiah(biaya.biaya_sertifikasi_madya)}</span></div>
+                            )}
+                            {biaya.biaya_sertifikasi_utama > 0 && (
+                              <div className="flex justify-between items-center gap-2"><span className="text-gray-400 text-xs">Sert. IPU:</span> <span className="text-amber-400 font-medium">{formatRupiah(biaya.biaya_sertifikasi_utama)}</span></div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </td>
                     
@@ -370,6 +385,7 @@ export default function BiayaTab() {
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">Full Pymt:</span> <span className="text-green-400">{biaya.diskon_full_payment > 0 ? `-${formatRupiah(biaya.diskon_full_payment)}` : "-"}</span></div>
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">Alumni:</span> <span className="text-blue-400">{biaya.diskon_alumni > 0 ? `-${formatRupiah(biaya.diskon_alumni)}` : "-"}</span></div>
                         <div className="flex justify-between items-center gap-2"><span className="text-gray-400">PII:</span> <span className="text-purple-400">{biaya.diskon_pengurus_pii > 0 ? `-${formatRupiah(biaya.diskon_pengurus_pii)}` : "-"}</span></div>
+                        <div className="flex justify-between items-center gap-2"><span className="text-gray-400">Gelombang:</span> <span className="text-orange-400">{biaya.diskon_gelombang > 0 ? `-${formatRupiah(biaya.diskon_gelombang)}` : "-"}</span></div>
                       </div>
                     </td>
                     

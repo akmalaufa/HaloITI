@@ -1,0 +1,15 @@
+# Abaikan barang-barang raksasa dan bekas build lokal
+node_modules
+.next
+
+# Abaikan file rahasia (karena nanti dibaca otomatis oleh Mandor dari luar, bukan di-copy ke dalam)
+.env*
+!.env.local
+
+# Abaikan sampah-sampah editor dan sistem lokal lu
+.vscode
+.git
+*.md
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
