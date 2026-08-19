@@ -7,7 +7,8 @@ import LeadsTableClient from "@/components/admin/LeadsTableClient";
 
 async function getLeads() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/leads`, {
+    const backendUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
+    const res = await fetch(`${backendUrl}/api/admin/leads`, {
       cache: 'no-store',
       headers: {
         'X-API-Key': process.env.X_API_KEY || ''

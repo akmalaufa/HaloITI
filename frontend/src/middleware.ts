@@ -30,8 +30,8 @@ export default withAuth(
       // 2. Cek Jalur Database (Admin Operasional di Backend Python)
       if (userEmail) {
         try {
-          const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-          const apiKey = process.env.NEXT_PUBLIC_X_API_KEY || process.env.X_API_KEY;
+          const backendUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
+          const apiKey = process.env.X_API_KEY || process.env.NEXT_PUBLIC_X_API_KEY;
           
           const res = await fetch(`${backendUrl}/api/admin/admin-users`, {
             headers: {

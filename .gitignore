@@ -38,3 +38,6 @@ backend/data_pipeline_embedding/chunks_output/
 
 # Testing
 backend/tests/
+
+# NLTK Dictionary (Kamus NLP, ukurannya lumayan gede jadi jangan di-push)
+backend/nltk_data/
