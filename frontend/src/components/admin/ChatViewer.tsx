@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { User, Bot, Zap, Network, MessageSquare } from "lucide-react";
+import { User, Bot, Zap, Network, MessageSquare, ChevronLeft, ChevronRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Virtuoso } from "react-virtuoso";
@@ -30,8 +30,10 @@ function formatLatency(ms: number) {
   return `${minutes}m ${remainingSeconds}s`;
 }
 
-export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
+export default function ChatViewer({ initialLeads, initialTotal = 0 }: { initialLeads: Lead[], initialTotal?: number }) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
+  const [totalLeads, setTotalLeads] = useState<number>(initialTotal);
+  const [leadsOffset, setLeadsOffset] = useState<number>(0);
   const [selectedLead, setSelectedLead] = useState<string>("");
   const [chats, setChats] = useState<ChatLog[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,26 +44,32 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [firstItemIndex, setFirstItemIndex] = useState<number>(10000);
 
-  // Polling Real-Time untuk daftar Maba baru
+  // Polling Real-Time untuk daftar Maba baru (hanya pada offset saat ini)
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/leads`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/leads?limit=20&offset=${leadsOffset}`, {
           headers: { 'X-API-Key': process.env.NEXT_PUBLIC_X_API_KEY || "" }
         });
         if (res.ok) {
           const json = await res.json();
           setLeads(json.data || []);
+          if (json.total_count !== undefined) {
+            setTotalLeads(json.total_count);
+          }
         }
       } catch (error) {
         // Abaikan error polling agar tidak mengganggu console
       }
     };
     
+    // Panggil langsung saat offset berubah
+    fetchLeads();
+
     // Tarik data setiap 5 detik (5000ms)
     const intervalId = setInterval(fetchLeads, 5000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [leadsOffset]);
 
   useEffect(() => {
     if (!selectedLead) {
@@ -169,23 +177,44 @@ export default function ChatViewer({ initialLeads }: { initialLeads: Lead[] }) {
   return (
     <div className="flex h-[75vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#18181b] shadow-2xl">
       {/* Top Bar - Dropdown */}
-      <div className="flex items-center gap-4 border-b border-white/10 bg-white/5 p-4">
-        <label htmlFor="lead-select" className="text-sm font-medium text-gray-400">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b border-white/10 bg-white/5 p-4">
+        <label htmlFor="lead-select" className="text-sm font-medium text-gray-400 whitespace-nowrap">
           Pilih Maba:
         </label>
-        <select
-          id="lead-select"
-          value={selectedLead}
-          onChange={(e) => setSelectedLead(e.target.value)}
-          className="flex-1 cursor-pointer rounded-lg border border-white/10 bg-[#0a0a0a] p-2.5 text-sm text-white focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
-        >
-          <option value="">-- Pilih Calon Mahasiswa --</option>
-          {leads.map((lead) => (
-            <option key={lead.id_lead} value={lead.id_lead}>
-              {lead.nama_lengkap}
-            </option>
-          ))}
-        </select>
+        <div className="flex w-full gap-2 items-center">
+          <select
+            id="lead-select"
+            value={selectedLead}
+            onChange={(e) => setSelectedLead(e.target.value)}
+            className="flex-1 cursor-pointer rounded-lg border border-white/10 bg-[#0a0a0a] p-2.5 text-sm text-white focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          >
+            <option value="">-- Pilih Calon Mahasiswa --</option>
+            {leads.map((lead) => (
+              <option key={lead.id_lead} value={lead.id_lead}>
+                {lead.nama_lengkap}
+              </option>
+            ))}
+          </select>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setLeadsOffset(Math.max(0, leadsOffset - 20))}
+              disabled={leadsOffset === 0}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-[#0a0a0a] text-white hover:bg-white/5 disabled:opacity-50"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <span className="text-xs font-medium text-gray-400 min-w-[3rem] text-center">
+              {Math.floor(leadsOffset / 20) + 1} / {Math.ceil(totalLeads / 20) || 1}
+            </span>
+            <button
+              onClick={() => setLeadsOffset(leadsOffset + 20)}
+              disabled={leadsOffset + 20 >= totalLeads}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-[#0a0a0a] text-white hover:bg-white/5 disabled:opacity-50"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Chat Area */}

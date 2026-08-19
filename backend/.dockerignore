@@ -1,0 +1,17 @@
+# Abaikan cache Python yang bikin kotor dan error beda OS
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Abaikan file rahasia (dibaca langsung oleh Mandor)
+.env
+
+# Abaikan lingkungan virtual lokal (jaga-jaga kalau suatu hari lu iseng naruh venv di dalam sini)
+venv/
+env/
+ENV/
+
+# Abaikan sampah editor
+.vscode/
+.git/
+*.md

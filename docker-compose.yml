@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # -----------------------------------------------------
+  # 1. KAMAR BACKEND (FastAPI)
+  # -----------------------------------------------------
+  backend:
+    # Kasih tau Mandor letak dapur dan resep Backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pmb_backend
+    
+    # Sambungkan pintu 8000 di dalam ke pintu 8000 di luar (laptop)
+    ports:
+      - "8000:8000"
+      
+    # Bawa dokumen rahasia (.env) ke dalam kamar Backend
+    env_file:
+      - ./backend/.env
+      
+    # Masukkan kamar ini ke jaringan "jalan tikus"
+    networks:
+      - pmb_network
+      
+    # Kalau error/crash, suruh Mandor otomatis nyalain lagi
+    restart: always
+
+  # -----------------------------------------------------
+  # 2. KAMAR FRONTEND (Next.js)
+  # -----------------------------------------------------
+  frontend:
+    # Kasih tau Mandor letak dapur dan resep Frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pmb_frontend
+    
+    # Sambungkan pintu 3000 di dalam ke pintu 3000 di luar (laptop)
+    ports:
+      - "3000:3000"
+      
+    # Bawa dokumen rahasia (.env.local) ke dalam kamar Frontend
+    env_file:
+      - ./frontend/.env.local
+      
+    # Tambahkan Jalan Tikus untuk Frontend
+    environment:
+      - INTERNAL_API_URL=http://backend:8000
+      
+    # ATURAN KETAT: Jangan nyala sebelum Backend selesai dibangun!
+    depends_on:
+      - backend
+      
+    # Masukkan kamar ini ke jaringan "jalan tikus" yang sama dengan Backend
+    networks:
+      - pmb_network
+      
+    # Kalau error/crash, suruh Mandor otomatis nyalain lagi
+    restart: always
+
+# -----------------------------------------------------
+# DEFINISI JARINGAN TIKUS (Private Network)
+# -----------------------------------------------------
+networks:
+  pmb_network:
+    driver: bridge

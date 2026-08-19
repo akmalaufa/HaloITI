@@ -7,7 +7,8 @@ export const metadata = {
 
 async function getLeads() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/leads`, {
+    const backendUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
+    const res = await fetch(`${backendUrl}/api/admin/leads`, {
       cache: 'no-store',
       headers: {
         'X-API-Key': process.env.X_API_KEY || ''
@@ -15,15 +16,18 @@ async function getLeads() {
     });
     if (!res.ok) throw new Error('Gagal menarik data leads');
     const json = await res.json();
-    return json.data || [];
+    return {
+      data: json.data || [],
+      totalCount: json.total_count || 0
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return { data: [], totalCount: 0 };
   }
 }
 
 export default async function ChatsPage() {
-  const leads = await getLeads();
+  const { data: leads, totalCount } = await getLeads();
 
   return (
     <div className="space-y-6">
@@ -39,7 +43,7 @@ export default async function ChatsPage() {
       </div>
 
       {/* Main Content (Client Component) */}
-      <ChatViewer initialLeads={leads} />
+      <ChatViewer initialLeads={leads} initialTotal={totalCount} />
     </div>
   );
 }
