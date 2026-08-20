@@ -12,6 +12,14 @@ RUN npm ci
 # Pindahin Kodingan: Copy seluruh source code frontend lu ke Ruangan 1
 COPY . .
 
+# Interkom untuk menerima bisikan variabel publik (tanpa rahasia)
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_X_API_KEY
+
+# Tulis ke papan tulis dapur agar bisa diukir oleh Next.js
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_X_API_KEY=$NEXT_PUBLIC_X_API_KEY
+
 # Proses Masak: Lakukan build (ini akan menghasilkan folder .next/standalone yang berisi piring bersih)
 RUN npm run build
 

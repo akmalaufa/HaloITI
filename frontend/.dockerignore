@@ -4,7 +4,6 @@ node_modules
 
 # Abaikan file rahasia (karena nanti dibaca otomatis oleh Mandor dari luar, bukan di-copy ke dalam)
 .env*
-!.env.local
 
 # Abaikan sampah-sampah editor dan sistem lokal lu
 .vscode

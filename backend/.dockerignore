@@ -15,3 +15,10 @@ ENV/
 .vscode/
 .git/
 *.md
+
+# Abaikan sampah testing dan cache lokal
+.pytest_cache/
+testing_tool/
+
+# Abaikan nltk_data lokal (karena Dockerfile sudah men-downloadnya sendiri saat build)
+nltk_data/
