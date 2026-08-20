@@ -34,6 +34,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_X_API_KEY: ${NEXT_PUBLIC_X_API_KEY}
     container_name: pmb_frontend
     
     # Sambungkan pintu 3000 di dalam ke pintu 3000 di luar (laptop)
