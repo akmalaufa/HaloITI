@@ -23,7 +23,7 @@ router = APIRouter()
 # ==========================================
 from fastapi.responses import StreamingResponse
 
-@router.post("/")
+@router.post("")
 @limiter.limit("10/minute")
 async def chat_endpoint(
     request: Request,

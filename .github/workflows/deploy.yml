@@ -1,0 +1,62 @@
+name: Production CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # TAHAP 1: PABRIK CLOUD (Build & Push)
+  build-and-push:
+    name: 🏗️ Build & Push Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: 🔑 Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 📦 Build, Tag, and Push (Fitur 2 Stiker)
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_X_API_KEY: ${{ secrets.NEXT_PUBLIC_X_API_KEY }}
+        run: |
+          # 1. Bikin kardusnya (Otomatis dapet stiker :latest dari docker-compose.yml)
+          docker compose build
+          
+          # 2. Cetak stiker kedua pakai ID Unik GitHub (Arsip History)
+          docker tag akmalaufa/project_ta-frontend:latest akmalaufa/project_ta-frontend:${{ github.sha }}
+          docker tag akmalaufa/project_ta-backend:latest akmalaufa/project_ta-backend:${{ github.sha }}
+          
+          # 3. Kirim image :latest ke Docker Hub (Buat dipakai VPS)
+          docker compose push
+          
+          # 4. Kirim image ID Unik ke Docker Hub (Buat disimpan di Gudang Arsip)
+          docker push akmalaufa/project_ta-frontend:${{ github.sha }}
+          docker push akmalaufa/project_ta-backend:${{ github.sha }}
+
+  # TAHAP 2: KURIR DEPLOYMENT (Masuk VPS)
+  deploy:
+    name: 🚀 Deploy to VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🌐 Eksekusi Docker di VPS (Via SSH)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
+          script: |
+            cd ~/project_ta
+            # Tarik stiker :latest yang baru nyampe dari pabrik
+            docker compose pull
+            # Jalankan ulang mesin (Zero downtime)
+            docker compose up -d
+            # Bersihkan sampah image lama di VPS biar memori gak penuh
+            docker image prune -af
