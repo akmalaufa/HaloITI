@@ -37,7 +37,8 @@ jobs:
           docker tag akmalaufa/project_ta-backend:latest akmalaufa/project_ta-backend:${{ github.sha }}
           
           # 3. Kirim image :latest ke Docker Hub (Buat dipakai VPS)
-          docker compose push
+          docker push akmalaufa/project_ta-frontend:latest
+          docker push akmalaufa/project_ta-backend:latest
           
           # 4. Kirim image ID Unik ke Docker Hub (Buat disimpan di Gudang Arsip)
           docker push akmalaufa/project_ta-frontend:${{ github.sha }}
