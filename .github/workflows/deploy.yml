@@ -25,6 +25,10 @@ jobs:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_X_API_KEY: ${{ secrets.NEXT_PUBLIC_X_API_KEY }}
         run: |
+          # 0. Bikin file .env kosong bohongan biar docker-compose.yml nggak ngambek
+          touch ./frontend/.env.local
+          touch ./backend/.env
+          
           # 1. Bikin kardusnya (Otomatis dapet stiker :latest dari docker-compose.yml)
           docker compose build
           
