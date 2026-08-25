@@ -50,19 +50,30 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: 🌐 Eksekusi Docker di VPS (Via SSH)
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script_stop: true
-          debug: true
-          script: |
-            cd ~/project_ta
-            # Tarik stiker :latest yang baru nyampe dari pabrik
-            docker compose pull
-            # Jalankan ulang mesin (Zero downtime)
-            docker compose up -d
-            # Bersihkan sampah image lama di VPS biar memori gak penuh
-            docker image prune -af
+      - name: 🌐 Eksekusi Docker di VPS (Via SSH ProxyJump)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          # 1. Bikin folder SSH & masukin gembok rahasia
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          
+          # 2. Tiru persis konfigurasi dari laptop Axioo lu (Jalur Tikus)
+          cat <<EOF > ~/.ssh/config
+          Host hosted.tirtagt.com
+            StrictHostKeyChecking no
+
+          Host akmal.hosted.tirtagt.com
+            HostName akmal.hosted.tirtagt.com
+            ProxyJump ssh-relay@hosted.tirtagt.com
+            User tct_client
+            StrictHostKeyChecking no
+            IdentityFile ~/.ssh/id_ed25519
+          EOF
+          
+          # 3. Kencengin permission config
+          chmod 600 ~/.ssh/config
+
+          # 4. Eksekusi Remote (Lompat dari GitHub -> Relay -> VPS)
+          ssh tct_client@akmal.hosted.tirtagt.com "cd ~/project_ta && docker compose pull && docker compose up -d && docker image prune -af"
