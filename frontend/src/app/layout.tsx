@@ -10,8 +10,20 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "HaloITI - Chatbot PMB ITI",
-  description: "Asisten Cerdas Penerimaan Mahasiswa Baru ITI",
+  title: "HaloITI - Chatbot Pintar PMB Institut Teknologi Indonesia",
+  description: "Tanya jawab seputar Penerimaan Mahasiswa Baru (PMB) Institut Teknologi Indonesia dengan cepat melalui asisten AI HaloITI.",
+  keywords: ["HaloITI", "PMB ITI", "Institut Teknologi Indonesia", "Chatbot ITI", "Kampus ITI", "Pendaftaran ITI"],
+  verification: {
+    google: "iwSqVSooTZpoz3OtbDmvmbDY0LDpV_XkgmMoPVaKR24",
+  },
+  openGraph: {
+    title: "HaloITI - Chatbot PMB ITI",
+    description: "Asisten AI pintar untuk info PMB ITI.",
+    url: "https://haloiti.akmalaufa.my.id",
+    siteName: "HaloITI",
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
