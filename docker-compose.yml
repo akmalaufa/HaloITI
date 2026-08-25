@@ -9,6 +9,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: akmalaufa/project_ta-backend:latest
     container_name: pmb_backend
     
     # Sambungkan pintu 8000 di dalam ke pintu 8000 di luar (laptop)
@@ -37,6 +38,7 @@ services:
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
         NEXT_PUBLIC_X_API_KEY: ${NEXT_PUBLIC_X_API_KEY}
+    image: akmalaufa/project_ta-frontend:latest
     container_name: pmb_frontend
     
     # Sambungkan pintu 3000 di dalam ke pintu 3000 di luar (laptop)

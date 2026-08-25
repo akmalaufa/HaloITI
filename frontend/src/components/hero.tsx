@@ -81,13 +81,7 @@ export function Hero() {
     >
       {/* --- LAYER 1: Gambar Background Full Screen --- */}
       <div className="absolute inset-0 z-0 bg-[#0a0a0a]">
-        <div 
-          className="absolute inset-0"
-          style={{
-            maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)'
-          }}
-        >
+        <div className="absolute inset-0">
           <Image
             ref={imageRef}
             src="/bg-kampus.jpg"
@@ -98,6 +92,9 @@ export function Hero() {
           />
           {/* Kaca Film Gelap (Gradient Overlay) */}
           <div className="hero-gradient absolute inset-0 pointer-events-none" />
+          
+          {/* Trik Ilusi Optik: Menggantikan maskImage (Lebih ringan buat GPU) */}
+          <div className="absolute inset-0 bg-linear-to-b from-transparent from-75% to-[#0a0a0a] pointer-events-none" />
         </div>
       </div>
 

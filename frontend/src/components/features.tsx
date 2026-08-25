@@ -68,17 +68,20 @@ export function Features() {
 
   return (
     <section ref={containerRef} className="relative bg-[#0a0a0a] pt-32 pb-16 px-6 overflow-hidden">
-      {/* Efek Gradasi Acak (Mesh Gradient / Glowing Orbs) - Oranye Pas (Sweet Spot) */}
+      {/* Efek Gradasi Acak (Mesh Gradient / Glowing Orbs) - KEMBALI KE ORIGINAL TAPI DI-BOOST GPU */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
           maskImage: 'linear-gradient(to bottom, transparent 0%, black 150px, black calc(100% - 150px), transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 150px, black calc(100% - 150px), transparent 100%)'
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 150px, black calc(100% - 150px), transparent 100%)',
+          // TRIK DEWA: Paksa browser nge-render blur ini sebagai gambar statis di memori GPU!
+          transform: 'translateZ(0)',
+          willChange: 'transform'
         }}
       >
-        <div className="absolute top-[0%] left-[-10%] w-200 h-200 rounded-full bg-brand/35 blur-[180px]" />
-        <div className="absolute top-[40%] right-[-10%] w-250 h-250 rounded-full bg-brand/25 blur-[200px]" />
-        <div className="absolute bottom-[5%] left-[5%] w-200 h-200 rounded-full bg-brand/30 blur-[180px]" />
+        <div className="absolute top-[0%] left-[-10%] w-200 h-200 rounded-full bg-brand/35 blur-[180px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
+        <div className="absolute top-[40%] right-[-10%] w-250 h-250 rounded-full bg-brand/25 blur-[200px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
+        <div className="absolute bottom-[5%] left-[5%] w-200 h-200 rounded-full bg-brand/30 blur-[180px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
       </div>
       
       <div className="relative z-10 mx-auto max-w-7xl flex flex-col gap-32">

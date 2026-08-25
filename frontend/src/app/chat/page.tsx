@@ -357,7 +357,7 @@ export default function ChatPage() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
       
-      let res = await fetch(`${apiUrl}/api/chat/`, {
+      let res = await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -379,7 +379,7 @@ export default function ChatPage() {
             token = renewData.access_token;
             localStorage.setItem("access_token", renewData.access_token);
             // Re-fetch chat API
-            res = await fetch(`${apiUrl}/api/chat/`, {
+            res = await fetch(`${apiUrl}/api/chat`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
