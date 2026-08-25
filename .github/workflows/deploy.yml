@@ -57,6 +57,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script_stop: true
+          debug: true
           script: |
             cd ~/project_ta
             # Tarik stiker :latest yang baru nyampe dari pabrik
