@@ -17,42 +17,6 @@ Sistem ini memecahkan masalah mendasar pada chatbot konvensional (halusinasi inf
 
 ---
 
-## 🏛️ Arsitektur Sistem (Agentic Flow)
-
-```mermaid
-graph TD
-    Maba((Calon Mahasiswa)) -->|Tanya Info PMB| FE[Next.js Frontend]
-    FE -->|API Request| BE[FastAPI Backend]
-    
-    subgraph Autonomous Agent Core
-        BE --> Mem[Sliding Window Memory]
-        Mem --> Gemini{Google Gemini 2.0}
-        Gemini -->|Menganalisa Niat| Router((Tool Router))
-    end
-    
-    subgraph Agent Tools
-        Router -->|Di luar konteks ITI| OOD[Guardrails Tool]
-        Router -->|Obrolan Umum| Slot[Slot Filling Tool]
-        Router -->|Biaya/Jadwal| SQL[Supabase Text-to-SQL]
-        Router -->|Aturan/Panduan| PC[Pinecone Hybrid Search]
-    end
-    
-    subgraph Cloud Infrastructure
-        SQL -->|Read-Only Query| DB[(Supabase PostgreSQL)]
-        PC -->|Dense + Sparse BM25| Vector[(Pinecone DB)]
-    end
-    
-    DB -.->|Data Baris| Gemini
-    Vector -.->|Konteks Dokumen| Gemini
-    OOD -.->|Tolak Sopan| Gemini
-    Slot -.->|Konteks Maba| Gemini
-    
-    Gemini -->|Final Response| BE
-    BE -->|Stream/JSON| FE
-```
-
----
-
 ## 🧠 Paradigma Sistem: Autonomous 4-Pillars Tooling
 
 Sistem tidak merespons pertanyaan pengguna secara linier. Model LLM (Google Gemini) bertindak sebagai "Otak Otonom" yang secara dinamis menganalisis niat pengguna (*User Intent*) dan memilih untuk mengeksekusi satu atau beberapa dari **4 Alat Utama (Tools)** yang telah didefinisikan menggunakan Skema Pydantic:
