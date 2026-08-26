@@ -7,11 +7,49 @@
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)
 ![Upstash Redis](https://img.shields.io/badge/Upstash-Redis-FF4500?logo=redis&logoColor=white)
 
+🔗 **Live Application:** [https://haloiti.akmalaufa.my.id](https://haloiti.akmalaufa.my.id)
+
 **HaloITI** adalah ekosistem Chatbot cerdas berbasis **Autonomous Agent** yang dirancang secara khusus untuk memberikan pendampingan informasi presisi tinggi bagi calon mahasiswa baru (Maba) Institut Teknologi Indonesia (ITI). 
 
 Sistem ini memecahkan masalah mendasar pada chatbot konvensional (halusinasi informasi dan latensi tinggi) dengan mengimplementasikan arsitektur *Agentic Retrieval-Augmented Generation (RAG)* tingkat lanjut. 
 
 > 💡 **Pure Python Implementation:** Berbeda dengan mayoritas proyek AI, keseluruhan orkestrasi agen (Agentic Orchestration), manajemen memori, dan logika *retrieval* pada proyek ini **dibangun murni dari nol (Pure Python)** menggunakan SDK bawaan Google GenAI, tanpa bergantung pada *framework* abstraksi tingkat tinggi seperti LangChain atau LlamaIndex. Pendekatan ini menghilangkan *overhead* (bloatware), memberikan kontrol absolut terhadap *prompt injection*, dan menghasilkan latensi eksekusi yang sangat rendah.
+
+---
+
+## 🏛️ Arsitektur Sistem (Agentic Flow)
+
+```mermaid
+graph TD
+    Maba((Calon Mahasiswa)) -->|Tanya Info PMB| FE[Next.js Frontend]
+    FE -->|API Request| BE[FastAPI Backend]
+    
+    subgraph Autonomous Agent Core
+        BE --> Mem[Sliding Window Memory]
+        Mem --> Gemini{Google Gemini 2.0}
+        Gemini -->|Menganalisa Niat| Router((Tool Router))
+    end
+    
+    subgraph Agent Tools
+        Router -->|Di luar konteks ITI| OOD[Guardrails Tool]
+        Router -->|Obrolan Umum| Slot[Slot Filling Tool]
+        Router -->|Biaya/Jadwal| SQL[Supabase Text-to-SQL]
+        Router -->|Aturan/Panduan| PC[Pinecone Hybrid Search]
+    end
+    
+    subgraph Cloud Infrastructure
+        SQL -->|Read-Only Query| DB[(Supabase PostgreSQL)]
+        PC -->|Dense + Sparse BM25| Vector[(Pinecone DB)]
+    end
+    
+    DB -.->|Data Baris| Gemini
+    Vector -.->|Konteks Dokumen| Gemini
+    OOD -.->|Tolak Sopan| Gemini
+    Slot -.->|Konteks Maba| Gemini
+    
+    Gemini -->|Final Response| BE
+    BE -->|Stream/JSON| FE
+```
 
 ---
 
@@ -78,3 +116,27 @@ Lebih jauh, sistem menerapkan **Dynamic Cache Invalidation**: Jika Admin memperb
 *   **Supabase (PostgreSQL):** *Single Source of Truth* untuk data tabular (Prodi, Biaya, Jadwal, Maba Leads) serta menyimpan pengaturan *file* pada Supabase Storage.
 *   **Pinecone DB:** Tempat bernaungnya ribuan vektor *embedding* untuk fungsi pencarian semantik tingkat lanjut.
 *   **Upstash Redis:** Memori *Key-Value* secepat kilat untuk menampung *Semantic Cache*, *Session Rate Limit*, dan pelacakan *Circuit Breaker*.
+
+---
+
+## 💻 Panduan Instalasi Lokal (Development)
+
+Jika Anda ingin menjalankan proyek ini di mesin lokal, pastikan Anda telah menginstal `Node.js (v18+)`, `Python (v3.10+)`, dan menyiapkan file `.env` di masing-masing direktori.
+
+```bash
+# 1. Clone repositori
+git clone https://github.com/akmalaufa/HaloITI.git
+cd HaloITI
+
+# 2. Jalankan Backend (FastAPI)
+cd backend
+python -m venv venv
+source venv/Scripts/activate # (Untuk Windows)
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+
+# 3. Jalankan Frontend (Next.js)
+cd ../frontend
+npm install
+npm run dev
+```
