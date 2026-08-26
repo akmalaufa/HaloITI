@@ -41,3 +41,7 @@ backend/tests/
 
 # NLTK Dictionary (Kamus NLP, ukurannya lumayan gede jadi jangan di-push)
 backend/nltk_data/
+# Deployment Documentation & Scripts
+deploy/
+DEPLOYMENT_BACKEND.md
+DEPLOYMENT_FRONTEND.md
