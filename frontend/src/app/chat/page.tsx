@@ -100,10 +100,7 @@ export default function ChatPage() {
       if (typeof window === "undefined") return;
 
       try {
-        // 1. Gunakan Session ID permanen (UUID statis) agar riwayat tidak hilang saat logout
-        const chatSessionId = "00000000-0000-0000-0000-000000000000";
-
-        // 2. Cek JWT Token
+        // 1. Cek JWT Token
         let token = localStorage.getItem("access_token");
 
         // Fungsi untuk tarik riwayat
@@ -111,7 +108,7 @@ export default function ChatPage() {
           try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
             // Meminta 20 pesan (10 pasang) mulai dari posisi terbaru (offset 0)
-            const res = await fetch(`${apiUrl}/api/chat/history/${chatSessionId}?limit=20&offset=0`, {
+            const res = await fetch(`${apiUrl}/api/chat/history?limit=20&offset=0`, {
               method: "GET",
               headers: { "Authorization": `Bearer ${jwt}` }
             });
@@ -203,9 +200,8 @@ export default function ChatPage() {
 
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        const chatSessionId = "00000000-0000-0000-0000-000000000000";
         // Cukup minta 1 history untuk mancing error 401 kalau akun dihapus
-        const res = await fetch(`${apiUrl}/api/chat/history/${chatSessionId}?limit=1&offset=0`, {
+        const res = await fetch(`${apiUrl}/api/chat/history?limit=1&offset=0`, {
           method: "GET",
           headers: { "Authorization": `Bearer ${token}` }
         });
@@ -229,12 +225,11 @@ export default function ChatPage() {
     
     setIsLoadingMore(true);
     try {
-      const chatSessionId = "00000000-0000-0000-0000-000000000000";
       let token = localStorage.getItem("access_token");
       if (!token) return;
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const res = await fetch(`${apiUrl}/api/chat/history/${chatSessionId}?limit=20&offset=${offset}`, {
+      const res = await fetch(`${apiUrl}/api/chat/history?limit=20&offset=${offset}`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -351,7 +346,6 @@ export default function ChatPage() {
     // 3. Tembak API Backend (POST Streaming)
     try {
       let token = localStorage.getItem("access_token");
-      const chatSessionId = "00000000-0000-0000-0000-000000000000";
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       
       const abortController = new AbortController();
@@ -364,7 +358,6 @@ export default function ChatPage() {
           "Authorization": `Bearer ${token}` // Kunci satpam
         },
         body: JSON.stringify({
-          session_id: chatSessionId,
           message: newUserMsg.content
         }),
         signal: abortController.signal
@@ -386,7 +379,6 @@ export default function ChatPage() {
                 "Authorization": `Bearer ${token}`
               },
               body: JSON.stringify({
-                session_id: chatSessionId,
                 message: newUserMsg.content
               }),
               signal: abortController.signal
@@ -677,7 +669,6 @@ export default function ChatPage() {
                 <button 
                   onClick={() => {
                     localStorage.removeItem("access_token");
-                    localStorage.removeItem("chat_session_id");
                     signOut({ callbackUrl: '/login' });
                   }}
                   className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 transition-colors flex items-center gap-2"
