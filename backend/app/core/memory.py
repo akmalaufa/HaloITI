@@ -33,7 +33,7 @@ async def get_chat_history(session_id: str, id_lead: str, limit: int = SLIDING_W
     if not redis_client:
         return []
 
-    redis_key = f"user:{id_lead}:session:{session_id}"
+    redis_key = f"user:{id_lead}:session:{session_id}:v2"
     
     try:
         # 1. Cek Redis hanya jika offset = 0 (meminta data terbaru)
@@ -112,7 +112,7 @@ async def save_chat_history(session_id: str, id_lead: str, user_query: str, bot_
     """
     Menyimpan pesan baru ke Redis (Update Cache) dan ke Supabase (Penyimpanan Abadi untuk Observability).
     """
-    redis_key = f"user:{id_lead}:session:{session_id}"
+    redis_key = f"user:{id_lead}:session:{session_id}:v2"
     
     # --- 1. Update Redis Cache (Time-Aware Memory) ---
     try:

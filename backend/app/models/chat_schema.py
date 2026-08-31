@@ -1,19 +1,14 @@
 # app/models/chat_schema.py
 
 from pydantic import BaseModel, Field
-from uuid import UUID
 
 # ==========================================
 # SATPAM INPUT (Menerima Pesan dari Maba)
 # ==========================================
 class ChatRequest(BaseModel):
-    # PENTING (SECURITY): id_lead sengaja ditiadakan di sini untuk mencegah celah IDOR.
-    # Identitas user akan diekstrak langsung dari token JWT di router.
-    
-    session_id: UUID = Field(
-        ..., 
-        description="ID unik untuk memisahkan sesi percakapan di Redis"
-    )
+    # PENTING (SECURITY): id_lead dan session_id sengaja ditiadakan di sini
+    # untuk mencegah celah IDOR (Client-Side Manipulation).
+    # Identitas user & sesi akan diekstrak langsung dari token JWT di router.
     
     message: str = Field(
         ..., 
@@ -26,9 +21,9 @@ class ChatRequest(BaseModel):
 # SATPAM OUTPUT (Mengirim Balasan ke Maba)
 # ==========================================
 class ChatResponse(BaseModel):
-    # Metrik performa tidak disertakan di sini agar response UI bersih
+    # Metrik performa dan session_id tidak disertakan di sini agar response UI bersih
+    # dan mencegah kebocoran struktur database backend ke browser.
     
-    session_id: UUID
     reply: str
     status: str = "success"
 
@@ -37,6 +32,5 @@ class ChatMessage(BaseModel):
     content: str
 
 class ChatHistoryResponse(BaseModel):
-    session_id: UUID
     history: list[ChatMessage]
     status: str = "success"

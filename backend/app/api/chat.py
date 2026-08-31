@@ -1,7 +1,6 @@
 # app/api/chat.py
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-from uuid import UUID
 import logging
 
 # Impor "Cetakan Kue" dari Langkah 2
@@ -33,13 +32,16 @@ async def chat_endpoint(
     """
     Pintu Depan untuk berinteraksi dengan AI via Streaming SSE.
     """
-    logger.info(f"📨 [API] Request Streaming masuk dari Maba (ID: {id_lead[:8]}...) - Sesi: {body.session_id}")
+    # KUNCI KEAMANAN: Paksa session_id menjadi id_lead
+    forced_session_id = id_lead
+    
+    logger.info(f"📨 [API] Request Streaming masuk dari Maba (ID: {id_lead[:8]}...) - Sesi Paksa: {forced_session_id}")
     
     try:
         # Panggil fungsi generator Streaming dari Koki Utama
         return StreamingResponse(
             chat_with_agent(
-                session_id=str(body.session_id),
+                session_id=forced_session_id,
                 id_lead=id_lead,
                 user_input=body.message
             ),
@@ -54,25 +56,26 @@ async def chat_endpoint(
 # ==========================================
 # LOKET 2: MEMINTA RIWAYAT MASA LALU
 # ==========================================
-@router.get("/history/{session_id}", response_model=ChatHistoryResponse)
+@router.get("/history", response_model=ChatHistoryResponse)
 async def get_history_endpoint(
-    session_id: UUID,
     limit: int = Query(20, description="Jumlah pesan maksimal (kelipatan genap)"),
     offset: int = Query(0, description="Jumlah pesan yang dilewati (kelipatan genap)"),
     id_lead: str = Depends(get_current_user_id) # Satpam bekerja di sini!
 ):
     """
-    Mengambil riwayat percakapan masa lalu berdasarkan session_id untuk Frontend.
+    Mengambil riwayat percakapan masa lalu (1-Room Chat) untuk Frontend.
     """
-    logger.info(f"📜 [API] Permintaan riwayat obrolan dari Maba (ID: {id_lead[:8]}...) - Sesi: {session_id} - Limit: {limit}, Offset: {offset}")
+    # KUNCI KEAMANAN: Paksa session_id menjadi id_lead
+    forced_session_id = id_lead
+    
+    logger.info(f"📜 [API] Permintaan riwayat obrolan dari Maba (ID: {id_lead[:8]}...) - Sesi Paksa: {forced_session_id} - Limit: {limit}, Offset: {offset}")
     
     try:
         # Panggil fungsi narik data dari Redis / Supabase
-        history = await get_chat_history(str(session_id), id_lead, limit=limit, offset=offset)
+        history = await get_chat_history(forced_session_id, id_lead, limit=limit, offset=offset)
         
-        # Cetak riwayat berlembar-lembar itu pakai Cetakan Kue
+        # Cetak riwayat berlembar-lembar itu pakai Cetakan Kue (Tanpa session_id)
         return ChatHistoryResponse(
-            session_id=session_id,
             history=history
         )
     except Exception as e:
